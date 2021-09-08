@@ -8,7 +8,8 @@ const array2 = [1, 2, 3, 4, 5];
 // max(1, 2, 3, 4, 10, 5, 6, 7);
 // arrayToString(["a", "b", "c"]);
 // arraySplice(array1);
-arraySlice(array2);
+// arraySlice(array2);
+testFunc(array1);
 
 // 배열로 파라메터를 받아옴
 function restToArray(...rest) {
@@ -39,6 +40,15 @@ function arraySlice(array1) {
   console.log("array : ", array);
   console.log("slice : ", array.slice(3));
   console.log("arraySlice : ", array);
+}
+
+function testFunc(array) {
+  const result = array.reduce((prev, curn) => {
+    // prev + curn;
+    console.log("prev", prev);
+    return prev + curn;
+  });
+  console.log("testFunc : " + result);
 }
 
 function testApp() {}
