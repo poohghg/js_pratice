@@ -1,6 +1,5 @@
-import "./styles.css";
 // max
-
+console.log("????????")
 const array1 = [1, 2, 3, 4, 5, 6];
 const array2 = [1, 2, 3, 4, 5];
 
@@ -9,7 +8,7 @@ const array2 = [1, 2, 3, 4, 5];
 // arrayToString(["a", "b", "c"]);
 // arraySplice(array1);
 // arraySlice(array2);
-testFunc(array1);
+// testFunc(array1);
 
 // 배열로 파라메터를 받아옴
 function restToArray(...rest) {
@@ -51,5 +50,15 @@ function testFunc(array) {
   console.log("testFunc : " + result);
 }
 
-function testApp() {}
-export default testApp;
+function functions() {
+  console.log("????????")
+  const array1 = [1, 2, 3, 4, 5, 6];
+  const array2 = [1, 2, 3, 4, 5];
+  // restToArray(1, 2, 3, 4, 10, 5, 6, 7);
+  // max(1, 2, 3, 4, 10, 5, 6, 7);
+  // arrayToString(["a", "b", "c"]);
+  // arraySplice(array1);
+  // arraySlice(array2);
+  testFunc(array1);
+}
+export default functions;
