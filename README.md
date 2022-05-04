@@ -1,2 +1,1 @@
-# js_pratice
-Created with CodeSandbox
+- 안녕하세요
