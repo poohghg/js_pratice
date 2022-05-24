@@ -6,7 +6,7 @@ JavaScript 통합 정리본
 
 ## 목차
 
-[toc]
+[TOC]
 
 ---
 
