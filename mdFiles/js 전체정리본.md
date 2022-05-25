@@ -15,6 +15,8 @@ JavaScript 통합 정리본
 - https://developer.mozilla.org/ko/docs/Learn/JavaScript/First_steps/What_is_JavaScript
   - Mdn 공식문서
 - https://ko.javascript.info/
+- https://github.com/yjs03057/33-js-concepts
+- https://velog.io/@jakeseo_me/series/33conceptsofjavascript
 
 ### 1.스크립트 로딩 전략
 
@@ -71,7 +73,7 @@ JavaScript 통합 정리본
 
 - 다른 스크립트에 의존하거나 DOM 로딩이 필요한 스크립트에는 `defer`를 사용하고, 원하는 순서에 맞춰서 `<script>` 요소를 배치하세요.
 
-  
+***
 
 ### 2.자료형
 
@@ -137,11 +139,76 @@ JavaScript 통합 정리본
     obj.objKey = objKey;
     ```
 
-데이터 타입에 의한 값의 해석
+#### 데이터 타입에 의한 값의 해석
+
+자바스크립트 엔진은 데이터 타입. 즉 값의 종류에 따라 정해진 크기의 메모리공간을 확보한다. 즉 변수에 할당되는 값의 데이터 타입에 따라 확보되어야 할 메모리 공간의 크기가 결정된다.
 
 - 값을 저장할 때 확보해야 하는 메모리 공간의 크기를 결정
 - 값을 참조할때 읽어 들어야 할 메모리 공간의 크기를 결정
 - 메모리에서 읽어 들인 2진수를 어떻게 해석할지 결정
+  - 심벌테이블: 컴파일러 또는 인터프리터는 심벌테이블 이라고 부르는 자료 구조를 통해 식별자를 키로 바인된 값의 메모리 주소, 데이터 타입, 스코프 등을 관리한다.
 
-/\* > 인용구
+
+#### 동적 타이핑
+
+자바스크립트 변수는 선인이 아닌 할당(깂)에 의해 타입이 결정된다. 그리고 재할당(값의 변화)에 의해 변수의 타입은 언제든지 동적으로 변할 수 있다.
+
+<> 정적타입(명시적 타입선언): 변수를 선언할때 데이터 타입을 선언 ex) java String name;
+
+- 변수는 꼭 필요한 경우 제한적으로 사용한다.
+- 변수의 유효범위(스코프)는 최대한 좁게 만들어 사용한다.
+- 전역변수는 최대한 사용하지 않는다.
+- 변수보다는 상수를 사용한다 `CONST 사용!!`
+- 변수의 이름은 변수의 목적이나 의미를 파악할 수 있도록 네이밍한다.
+
+#### 암묵적 형 변환
+
+자바스크립트 엔진에 의해 암묵적으로 타입이 자동 변환되기도 한다.
+
+```javascript
+  const string_1 = "1";
+  const string_2 = "2";
+  const number_1 = 1;
+  const number_2 = 2;
+  // -> 12
+  console.log(string_1 + number_1);
+  // -> 12
+  console.log(string_1 + string_2);
+  // 3
+  console.log(number_1 + number_2);
+  // 1true -> string 으로 변환?
+  console.log(string_1 + true);
+  // 1false
+  console.log(string_1 + false);
+  // string
+  console.log(typeof(string_1 + true)); 
+  // -> 2 true는 number 1로 변환
+  console.log(number_1 + true);
+  // -> 1 fals는 number 0으로 변환
+  console.log(number_1 + false);
+  // -> 1 null은 number 0으로 변환
+  console.log(number_1 + null);
+  // NaN undefined은 숫자로 타입 변환되지 않는다.
+  console.log(number_1 + undefined);
+  // true 동등비교연산이 일어날 경우에도 자동 형변환이 일어난다.
+  console.log(string_1 == number_1);
+  // false 일치비교연산시는 자동향 변환이 일이나지 않음(타입 및 값을 비교).
+  console.log(string_1 === number_1);
+	// 일치비교 연산시 팁!! -> false
+	// NaN은 isNaN 또는 object.is 로비교 
+	console.log(NaN === NaN);
+
+```
+
+### 3.객체
+
+레퍼런스는 데이터영역에 저장.
+
+함수의 오브젝트는 힙에 저장된다.
+
+
+
+/ > `인용구`
+
+
 
