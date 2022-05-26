@@ -32,7 +32,7 @@ function implicitCast(params) {
   const string_2 = "2";
   const number_1 = 1;
   const number_2 = 2;
-
+  
   // -> 12
   console.log(string_1 + number_1);
   // -> 12

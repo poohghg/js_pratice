@@ -73,7 +73,9 @@ JavaScript 통합 정리본
 
 - 다른 스크립트에 의존하거나 DOM 로딩이 필요한 스크립트에는 `defer`를 사용하고, 원하는 순서에 맞춰서 `<script>` 요소를 배치하세요.
 
-***
+---
+
+
 
 ### 2.자료형
 
@@ -109,12 +111,12 @@ JavaScript 통합 정리본
   - 따옴표는 세 종류가 있습니다.
     1. 큰따옴표: `"Hello"`
     2. 작은따옴표: `'Hello'`
-    3. 역 따옴표(백틱, backtick): ``Hello``
+    3. 역 따옴표(백틱, backtick): `Hello`
   - 원시 타입으로 변경 불가능한 값이다.
 
 - 불린형(논리 타입) - 불린형(논리 타입)은 `true`와 `false` 두 가지 값밖에 없는 자료형입니다.
 
-- undefined 
+- undefined
 
   - 변수를 선언 후 값이 할당되지 않는다면, 자바스크립트 엔진이 기본적으로 값을 할당하는 값.
   - 값이 현재 할당되지 않는 상태이다.
@@ -129,12 +131,12 @@ JavaScript 통합 정리본
 
   - 변경 불가능한 원시타입이다.
 
-  - 심벌 값은 다른 값과 중복되지 않는 유일무일한 값이다. 
+  - 심벌 값은 다른 값과 중복되지 않는 유일무일한 값이다.
 
   - 주로 이름이 충돌할 위험이 없는 객체의 유일한 프로퍼티 키를 만들기 위해 사용된다.
 
   - ```javascript
-    const objKey = Symbol('obj');
+    const objKey = Symbol("obj");
     const obj = {};
     obj.objKey = objKey;
     ```
@@ -147,7 +149,6 @@ JavaScript 통합 정리본
 - 값을 참조할때 읽어 들어야 할 메모리 공간의 크기를 결정
 - 메모리에서 읽어 들인 2진수를 어떻게 해석할지 결정
   - 심벌테이블: 컴파일러 또는 인터프리터는 심벌테이블 이라고 부르는 자료 구조를 통해 식별자를 키로 바인된 값의 메모리 주소, 데이터 타입, 스코프 등을 관리한다.
-
 
 #### 동적 타이핑
 
@@ -165,39 +166,40 @@ JavaScript 통합 정리본
 
 자바스크립트 엔진에 의해 암묵적으로 타입이 자동 변환되기도 한다.
 
-```javascript
-  const string_1 = "1";
-  const string_2 = "2";
-  const number_1 = 1;
-  const number_2 = 2;
-  // -> 12
-  console.log(string_1 + number_1);
-  // -> 12
-  console.log(string_1 + string_2);
-  // 3
-  console.log(number_1 + number_2);
-  // 1true -> string 으로 변환?
-  console.log(string_1 + true);
-  // 1false
-  console.log(string_1 + false);
-  // string
-  console.log(typeof(string_1 + true)); 
-  // -> 2 true는 number 1로 변환
-  console.log(number_1 + true);
-  // -> 1 fals는 number 0으로 변환
-  console.log(number_1 + false);
-  // -> 1 null은 number 0으로 변환
-  console.log(number_1 + null);
-  // NaN undefined은 숫자로 타입 변환되지 않는다.
-  console.log(number_1 + undefined);
-  // true 동등비교연산이 일어날 경우에도 자동 형변환이 일어난다.
-  console.log(string_1 == number_1);
-  // false 일치비교연산시는 자동향 변환이 일이나지 않음(타입 및 값을 비교).
-  console.log(string_1 === number_1);
-	// 일치비교 연산시 팁!! -> false
-	// NaN은 isNaN 또는 object.is 로비교 
-	console.log(NaN === NaN);
+자바스크립트 엔진은 표현식을 평가할때 코드의 문맥을 고려해 암묵적으로 데이터 타입을 강제 변환한다.
 
+```javascript
+const string_1 = "1";
+const string_2 = "2";
+const number_1 = 1;
+const number_2 = 2;
+// -> 12
+console.log(string_1 + number_1);
+// -> 12
+console.log(string_1 + string_2);
+// 3
+console.log(number_1 + number_2);
+// 1true -> string 으로 변환?
+console.log(string_1 + true);
+// 1false
+console.log(string_1 + false);
+// string
+console.log(typeof (string_1 + true));
+// -> 2 true는 number 1로 변환
+console.log(number_1 + true);
+// -> 1 fals는 number 0으로 변환
+console.log(number_1 + false);
+// -> 1 null은 number 0으로 변환
+console.log(number_1 + null);
+// NaN undefined은 숫자로 타입 변환되지 않는다.
+console.log(number_1 + undefined);
+// true 동등비교연산이 일어날 경우에도 자동 형변환이 일어난다.
+console.log(string_1 == number_1);
+// false 일치비교연산시는 자동형변환이 일이나지 않음(타입 및 값을 비교).
+console.log(string_1 === number_1);
+// 일치비교 연산시 팁!! -> false
+// NaN은 isNaN 또는 object.is 로비교
+console.log(NaN === NaN);
 ```
 
 - 암묵적 타입 변환이 일어나는 조건식일때의 값
@@ -209,15 +211,133 @@ JavaScript 통합 정리본
     - NaN
     - '' (빈문자열)
 
-### 3.객체
+### 3.유용한 연산자
 
-레퍼런스는 데이터영역에 저장.
+#### 단축평가
 
-함수의 오브젝트는 힙에 저장된다.
+||(논리핪) or &&(논리곱) 연산자 표현식의 평가결과는 불리언 값이 아닐 수도 있다. 두 연산자는 언제나 2개의 피연산중 어느 한쪽으로 평가된다. 왼쪽연산자 부터 시작해 오른쪽으로 나아가며 피연산자를 계산한다.
+
+- || 연산자
+  - 각 피연산자를 불린형으로 변환하여 평가한다음, true이면 평가를 멈추고 변환전 해당값 반환한다.
+  - 모든값이 false로 평가되는 경우 변환전 마지막값을 반환한다.
+- && 연산자 
+  - 각 피연산자를 불린형으로 변환하여 평가한다음, false이면 평가를 멈추고 변환전 해당값 반환한다.
+  - 모든값이 true로 평가되는 경우 변환전 마지막값을 반환한다.
+  - 
+
+| true \|\| anything  |   true   |
+| :-----------------: | :------: |
+| false \|\| anything | anything |
+|  true && anything   | anything |
+|  false && anything  |  False   |
 
 
+
+```javascript
+// 단축평가를 사용한 기본값 설정
+function shortEvaluation(v) {
+  // falsey 한값일 경우 기본값으로 취환된다.
+  v = v || "notValue"
+  console.log(v);
+  return v
+}
+
+// 매개변수의 기본값 설정시
+// 인자값이 null or undefined 인경우만 동작한다.
+function isDefaultParams(v = "notValue") {
+  console.log(v);
+  return v
+}
+
+// -> notValue
+shortEvaluation(NaN)
+// -> undefined (기본값으로 취환되지 않음.)
+isDefaultParams(NaN)
+// arguments는 null은 notValue 취환 -> notValue
+isDefaultParams()
+
+```
+
+
+
+Nullish 병합 연산자 ??
+
+- nullish의 경우 || 연산자와 비슷해보이지만 || 연산자의 경우 앞의 값이 `falsey`값인 경우 뒤의값을 취하지만 ***?? 병합연사자의 경우 앞의 값이 null || undefined인 경우에만*** 뒤의 값을 취한다. 
+
+- ```javascript
+  let height = 0;
+  // 앞은 연산자를 블리언으로 변환후 false이면 우항의값을 반환한다.
+  alert(height || 100); // 100
+  // 앞은 연산자 값이 null 또는 undefined 이면 우항의값을 반환한다. 
+  alert(height ?? 100); // 0
+  ```
+
+- 연산자 우선순위가 5로 낮기 때문에 괄호를 사용하자.
+
+- 안정성 관련 이슈 때문에 `??`는 `&&`나 `||`와 함께 사용하지 못한다.
 
 / > `인용구`
 
+#### 옵셔널 체이닝
 
+?.연산자는 좌항의 피연산자가 null 또는 undefined 인경우 평가를 멈추고 undefined을 반환하고, 그렇지 않으면 우항의 프로퍼티 값을 참고한다.
+
+- 이는 객체가 null 또는 undefined 아닌지 확인하고 객체의 프로퍼티를 참고할때 유용한다.
+
+- ```javascript
+  function checkFunction(obj) {
+    console.log("user:",obj?.user); 
+    console.log(obj?.printUser?.());
+  }
+  
+  const info1 = {
+    user:"kwon",
+    printUser(){return this.user}
+  }
+  const info2 = {}
+  // 실제 프로퍼티가 존재하기에 -> kwon이 찍힌다.
+  checkFunction(info1)
+  // 존재하지 않는 프로퍼티에 접근하였기에 undefined이 찍힌다.
+  // 옵셔널 체이닝을 사용하지 않았을경우 참조에러로app crashed가된다.
+  checkFunction(info2)
+  
+  ```
+
+- 옵셔널 체이닝을 남발할 경우 조기에 에러를 발견하지 못하거나, 디버깅이 어려워 질 수 있다. (필수값에는 사용하지 말자.)
+
+- 참조하는 변수는 꼭 선언 되어 있어야한다!!!
+
+  
+
+***
+
+
+
+### 객체
+
+객체는 0개 이상의 프로퍼티로 구성된 집합이며, 프로퍼티는 키와 값으로 구성된다. 객체는 원시타입 (immutable value)과는 다르게 다양한 타입의 값으로 구성된 복합적인 자료구조이다. 원시타입의 값은 변경 불가능하지만, 객체 타입의 값은 변경가능하다. 자바스크립트에서 사용할 수 있는 모든 값은 프로퍼티 값이 될 수 있다. 함수 또한 일급 객체 이므로 프로퍼티로 사용 할 수 있다. 프로퍼티 값이 함수일 경우 일반 함수와 구분하기 위해 메서드라 부른다.
+
+- 객체 리터럴
+
+  ```javascript
+  const info1 = {
+    user:"kwon",
+    printUser(){return this.user}
+  }
+  // 빈객채를 생성
+  const info2 = {}
+  ```
+
+- **객체를 대괄호 연산자로 접근할 경우 반드시 따옴포로 감싼 문자열로 접근해야한다. `이는 자바스크립트 엔진이 식별자로 해석하기 때문이다.`**
+
+- ```javascript
+  // kwon
+  console.log(info1["user"]);
+  // error -> user is not defined
+  const key1 = "user"
+  // kwon
+  console.log(info1[key1]);
+  ```
+
+  
 
