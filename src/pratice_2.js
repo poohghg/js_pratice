@@ -59,7 +59,23 @@ function implicitCast(params) {
   // false
   console.log(string_1 === number_1);
 }
+function copyValue() {
+  
+  let score = 80;
+  // score의값 80이 할당
+  let copy = score
+  // -> true
+  console.log(score === copy);
+  score = 100;
+  // -> false
+  console.log(score === copy);
+}
+
+
+
+
 
 // unaryFuncionts();
 // checkTypeOf();
-implicitCast();
+// implicitCast();
+copyValue();
