@@ -72,10 +72,7 @@ function copyValue() {
 }
 
 
-
-
-
-// unaryFuncionts();
-// checkTypeOf();
-// implicitCast();
+unaryFuncionts();
+checkTypeOf();
+implicitCast();
 copyValue();
