@@ -18,6 +18,12 @@ JavaScript 통합 정리본
 - https://github.com/yjs03057/33-js-concepts
 - https://velog.io/@jakeseo_me/series/33conceptsofjavascript
 
+
+
+***
+
+
+
 ### 1.스크립트 로딩 전략
 
 페이지의 모든 HTML은 순서 그대로 불러온다. JavaScript 를 사용해서 페이지 내의요소( [Document Object Model](https://developer.mozilla.org/ko/docs/Learn/JavaScript/Client-side_web_APIs/Manipulating_documents#the_document_object_model))를 조작하려할때, HTMl의 요소보다 JAVASCRIPT파일을 먼저 불러와버리면 코드가 올바르게 동작하지 않을 수 있다.
@@ -242,8 +248,27 @@ console.log(string_1 == number_1);
 // false 일치비교연산시는 자동형변환이 일이나지 않음(타입 및 값을 비교).
 console.log(string_1 === number_1);
 // 일치비교 연산시 팁!! -> false
-// NaN은 isNaN 또는 object.is 로비교
+// NaN은 isNaN 또는 object.is로 비교
 console.log(NaN === NaN);
+
+function checkTypeOf() {
+  console.log("null ", typeof null);
+  // null은 object로 반환한다. js의 버그이다.
+  // type of 는  원시타입5개(null 제외) + object + function 총 7개 형태로 반환한다.
+  // 함수의 타입은 function이다.
+  // 배열은 유사배열 객체로 object 타입이다. 배열 확인은 Array.isArray()함수를 통해 확인.
+  // null 타입은 반환하지 않는다.
+  const temp = null;
+  const obj = {};
+  // temp의 타입은 object다.
+  console.log("temp의 타입은 ? ", typeof temp);
+  // false
+  console.log(typeof temp === null);
+  // true
+  console.log(typeof temp === typeof obj);
+  // true
+  console.log(temp === null);
+}
 ```
 
 - 암묵적 타입 변환이 일어나는 조건식일때의 값
@@ -312,9 +337,9 @@ Nullish 병합 연산자 ??
 
   ```javascript
   let height = 0;
-  // 앞은 연산자를 블리언으로 변환후 false이면 우항의값을 반환한다.
+  // 좌항의 값을 블리언으로 변환후 false이면 우항의값을 반환한다.
   alert(height || 100); // 100
-  // 앞은 연산자 값이 null 또는 undefined 이면 우항의값을 반환한다. 
+  // 좌항의 값이 null 또는 undefined 이면 우항의값을 반환한다. 
   alert(height ?? 100); // 0
   ```
 
@@ -361,7 +386,7 @@ Nullish 병합 연산자 ??
 
 ### 4.객체
 
-객체는 0개 이상의 프로퍼티로 구성된 집합이며, 프로퍼티는 키와 값으로 구성된다. 객체는 원시타입 (immutable value)과는 다르게 다양한 타입의 값으로 구성된 복합적인 자료구조이다. 원시타입의 값은 변경 불가능하지만, 객체 타입의 값은 변경가능하다. 자바스크립트에서 사용할 수 있는 모든 값은 프로퍼티 값이 될 수 있다. 함수 또한 일급 객체 이므로 프로퍼티로 사용 할 수 있다. 프로퍼티 값이 함수일 경우 일반 함수와 구분하기 위해 메서드라 부른다.
+객체는 0개 이상의 프로퍼티로 구성된 집합이며, 프로퍼티는 키와 값으로 구성된다. 객체는 원시타입 (immutable value)과는 다르게 다양한 타입의 값으로 구성된 복합적인 자료구조이다. 원시타입의 값은 변경 불가능하지만, **객체 타입의 값은 변경가능하다**. 자바스크립트에서 사용할 수 있는 모든 값은 프로퍼티 값이 될 수 있다. 함수 또한 일급 객체 이므로 프로퍼티로 사용 할 수 있다. 프로퍼티 값이 함수일 경우 일반 함수와 구분하기 위해 메서드라 부른다.
 
 - 객체 리터럴
 
@@ -385,5 +410,135 @@ Nullish 병합 연산자 ??
   console.log(info1[key1]);
   ```
 
+- 객체의 접근경우 변수에 할당된 참조값에 의해 메모리에 접근하면, 참조값(참조 주소)은 객체가 저장된 메모리 공간의 주소이다.
+
+  - 메모리에 저장되어 있는 참조값을 통해 실제 객체(데이터)에 접근한다.
+
+  - 원시값의 변경불가능한 값으로, 재할당을 통해 값을 변경한다. `반면 객체는 변경 가능한 값이므로 메모리에 저장된 객체를 직접 수정할 수 있다.`
+
+    - 객체에 할당한 변수의 참조값은 변하지 않는다.(하지만 참조값의 실제 데이터는 수정가능하다.)
+    - 이는 객체를 복사해서 생성하는 비용을 절약하여 성능적 향상을 가져가기 위함이다.
+
+  - ```javascript
+    function checkObj() {
+     const a = {
+       name:"kown"
+     }
+     const b = a
+     // true: 둘의 저장된 메모리는 다르지만 동일한 참조값을 바라본다.
+     // 값에 의한전달.
+     console.log(a===b);
+     b.update = true
+     // b의값이 변하면 a의값도 변한다.
+     console.log(a);
+     console.log(b);
+      // a객체와 b객체는 같은 메모리 주소를 참고한다.
+      // a -> { name: 'kown', update: true }
+      // b -> { name: 'kown', update: true }
+     console.log(a===b);
+    }
+    ```
+
+  - 얕은 복사 vs 깊은복사
+
+    - 객체를 프로퍼티 값으로 갖는 객체의 경우 얕은 복사는 한 단계까지만 복사하는 것을 말하고 깊은 복사는 객체에 중첩되어 있는 객체까지 모두 복사하는 것을 말한다.
+
+    - 얕은 복사로 만들어진 객체는 별개의 객체이다. 하지만 중첩되어 있는 객체의 참조값을 같은 참조 값을 복사한다.
+
+    - 반면 깉은 복사의 경우 객체에 중첩되어 있는 객체까지 모수 복사하여 완전한 복사본을 만든다.
+
+      - 깊은복사 방법
+        - 재귀를 통한 방법
+        - JSON.parse(JSON.stringify(obj));
+          - JSON 문자열로 변환후 객체화 (느리다...)
+
+        - [lodash](https://lodash.com/)의 메서드인 [_.cloneDeep(obj)](https://lodash.com/docs#cloneDeep)을 사용
+        - 참고 - https://ko.javascript.info/object-copy
+
+    - ```javascript
+      // 얕은복사
+      const obj1 = {name:"kwon",isUpdate:false,keyList:["kwon",false,5],innerObj:{a:"aaa",b:"bbb"}}
+      // 얕은복사 둘의 결과는 같다.
+      const obj2 = Object.assign({},obj1)
+      // const obj2 = {...obj1}
+      // -> false 
+      console.log(obj1 === obj2);
+      // -> true 실제 중첩되어 있는 객체의경우에도 같은 참조값을 봐라본다.
+      console.log(obj1.keyList === obj2.keyList);
+      
+      // 중복 객체의 경우 같은 참조값 가짐.
+      obj1 :  {
+        name: 'kwon',
+        isUpdate: false,
+        keyList: [ 'kwon', false, 5 ],
+        innerObj: { a: 'aaa', b: 'bbb' }
+      }
+      
+      obj2 :  {
+        name: 'kwon',
+        isUpdate: false,
+        keyList: [ 'kwon', false, 5 ],
+        innerObj: { a: 'aaa', b: 'bbb' }
+      }
+      
+      // 깊은복사
+      // 재귀를 통한 복사.
+      function copy (_obj){
+        const result = Array.isArray(_obj) ? [] : {}
+      
+        for (const key in _obj) {
+          if(typeof _obj[key] === "object"){
+            result[key] = copy(_obj[key])
+          }else{
+            result[key] = _obj[key];
+          }
+        }
+        return result;
+      }
+      
+      // lodash 사용
+      const lodash = require("lodash");
+      const obj2 = lodash.cloneDeep(obj1);
+      const obj2 = copy(obj1);
+      // -> false
+      console.log(obj1.keyList === obj2.keyList);
+      
+      ```
+
+
+  ***
+
   
+
+### 5.함수
+
+함수는 객체타입으로 선언된 함수 이름은 함수 참조값 or 참조주소(힙 영역)에 의해 메모리에 접근한다.
+
+- 객체의 접근경우 변수에 할당된 참조값에 의해 메모리에 접근하면, 참조값(참조 주소)은 객체가 저장된 메모리 공간의 주소이다(실제 데이터 영역).
+
+- ```javascript
+  // 함수이름(매개변수,인자) -> parameter
+  function  callFunction(a,b) {
+    return a+b
+  }
+  // 인수(argument)
+  callFunction(1,2)
+  
+  function fun_1(num) {
+    return num; 
+  }
+  
+  // 함수는 참조타입으로 변수에 함수식별자의 값(참조 주소)을 할당할 수 있다.
+  // 실행값 x -> 단지 변수에 함수의 값을 할당
+  const getNum = fun_1;
+  // -> true
+  console.log(getNum === fun_1);
+  
+  ```
+
+  
+
+
+
+
 

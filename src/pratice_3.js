@@ -41,23 +41,3 @@ console.log(info1[key1]);
 // arguments는 null은 test로 취환 -> notValue
 // isDefaultParams()
 
-
-function solution_15_my(_str) {
-  const str = _str;
-  const overlapArray = [];
-
-  for (let index = 0; index < str.length; index++) {
-    const v = str[index];
-    console.log("tt", overlapArray);
-    console.log( v in overlapArray);
-    if (String(v) in overlapArray) {
-      String(str).replace(v, "");
-    } else {
-      console.log(v);
-      overlapArray.push(v);
-    }
-  }
-  return str;
-}
-
-solution_15_my("ksekksetss")

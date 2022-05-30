@@ -1,16 +1,17 @@
 function checkTypeOf() {
   console.log("null ", typeof null);
-  console.log("isFunction ? ", typeof unaryFuncionts);
   // null은 object로 반환한다. js의 버그이다.
   // type of 는  원시타입5개 + object + function 총 7개 형태로 반환한다.
   // null 타입은 반환하지 않는다.
-
   const temp = null;
-  // temp 는 object다 ㅡㅡ
+  const obj = {};
+  // temp의 타입은 object다.
   console.log("temp의 타입은 ? ", typeof temp);
-  // object
-  console.log(typeof temp === null);
   // false
+  console.log(typeof temp === null);
+  // true
+  console.log(typeof temp === typeof obj);
+  // true
   console.log(temp === null);
 }
 function unaryFuncionts() {
@@ -72,7 +73,7 @@ function copyValue() {
 }
 
 
-unaryFuncionts();
+// unaryFuncionts();
 checkTypeOf();
-implicitCast();
-copyValue();
+// implicitCast();
+// copyValue();
