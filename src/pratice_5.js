@@ -45,9 +45,10 @@ function regiCallback(v,action){
 console.log("callBack",regiCallback(5,doubble));
 
 
-function chageObjNum(obj) {
-  return {...obj,num:2} 
-}
+// function chageObjNum(obj) {
+//   return {...obj,num:2} 
+// }
+// const obj2 = chageObjNum(obj1);
 
 // const obj1 ={name:"k",num:5};
 // const obj2 = chageObjNum(obj1);
