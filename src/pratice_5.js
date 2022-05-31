@@ -34,3 +34,48 @@ calArguments("a","b","c")
 // 함수의 선언문
 // 함수의 표현식
 // 화살표 함수
+
+
+const doubble = (x) => x * 2
+
+function regiCallback(v,action){
+  return action(v)
+}
+ // 함수는 일급객체로 인수로 전달 가능
+console.log("callBack",regiCallback(5,doubble));
+
+
+function chageObjNum(obj) {
+  return {...obj,num:2} 
+}
+
+// const obj1 ={name:"k",num:5};
+// const obj2 = chageObjNum(obj1);
+// console.log(obj1,obj2);
+// console.log(obj1 === obj2);
+
+
+const obj1 ={name:"k",num:5,list:[1,2,3]};
+const obj2 = {...obj1,num:10,list:[...obj1.list,10,20]};
+
+console.log(obj1,obj2);
+console.log(obj1 === obj2);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
