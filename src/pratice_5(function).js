@@ -11,8 +11,6 @@ function  callFunction(a,b) {
   return num; 
  }
 
- function test(){}
-
  function calArguments(){
   console.log(arguments);
   // false
@@ -56,11 +54,7 @@ console.log("callBack",regiCallback(5,doubble));
 // console.log(obj1 === obj2);
 
 
-const obj1 ={name:"k",num:5,list:[1,2,3]};
-const obj2 = {...obj1,num:10,list:[...obj1.list,10,20]};
 
-console.log(obj1,obj2);
-console.log(obj1 === obj2);
 
 
 
