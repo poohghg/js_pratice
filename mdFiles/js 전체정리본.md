@@ -706,7 +706,8 @@ https://developer.mozilla.org/en-US/docs/Glossary/Scope
 
 - 각각의 블록은 렉시컬 환경을 가지고 있다.
   - 환경레코드
-  - 외부 환경 참조
+  - 외부 환경 참조(이는 내부스코프에서 스코프 체인을 통해 외부 레시컬 환경에 접근할 수 있기 때문이다.)
+  - ![스코프 체인과 클로저](https://images.velog.io/images/rlatmdgns94/post/d1b27a4f-c73b-4515-8264-e2605f5636b2/_.png)
 
 
 
