@@ -586,7 +586,7 @@ Nullish 병합 연산자 ??
 
 - return문 -> 기본적으로 undefined을 반환
 
-  - return문을 만나면 함수는 종료된다.
+  - `return문을 만나면 함수는 종료된다.`
 
 
 #### 화살표 함수
@@ -661,13 +661,52 @@ function outerFuncion(arr){
 console.log(outerFuncion([1,2,3,4,5])); 
 ```
 
+***
 
 
 
+### 6.스코프(Scope)
 
+스코프는 변수,함수,클래스이름(식별자)의 유효한 범위이다(실행 컨택스트). 이는 선언된 위치에 따라 유효범위가 결정된다. 스코프의 범위는 블럭 안에서만 유효하다.
 
+> 현재 실행 컨텍스트입니다. [값](https://developer.mozilla.org/en-US/docs/Glossary/Value) 과 **표현식** 이 "표시"되거나 참조될 수 있는 컨텍스트입니다 . 변수 또는 기타 표현식이 "현재 범위에" 있지 않으면 사용할 수 없습니다.범위는 계층 구조로 계층화될 수도 있으므로 하위 범위가 상위 범위에 액세스할 수 있지만 그 반대는 불가능합니다.
+>
+> **[함수](https://developer.mozilla.org/en-US/docs/Glossary/Function)** 는 [JavaScript](https://developer.mozilla.org/en-US/docs/Glossary/JavaScript) 에서 **클로저** 역할을 하므로 범위를 생성하므로 (예를 들어) 함수 내에서만 독점적으로 정의된 변수는 함수 외부 또는 다른 함수 내에서 액세스할 수 없습니다. 예를 들어 다음은 유효하지 않습니다.
+>
+> ---https://developer.mozilla.org/en-US/docs/Glossary/Scope
 
+```javascript
+function basisScope() {
+  const outer = 'test';
+  {
+    const inner = 'inner';
+    // 상위 스코프 변수에 접근가능
+    console.log(outer);
+  }
+  // 같은 스크프에 있는 변수 
+  console.log(outer);
+  // 하위 스코프 변수에 접근 불가능
+  //-> 접근 불가
+  // console.log(inner);
+}
+```
 
+코드 블록이 정의되는곳
+
+If, for,{},function(){}
+
+- 이름 충돌방지
+- 메모리 절약
+
+#### GC
+
+https://developer.mozilla.org/en-US/docs/Glossary/Scope
+
+렉시컬 환경
+
+- 각각의 블록은 렉시컬 환경을 가지고 있다.
+  - 환경레코드
+  - 외부 환경 참조
 
 
 
