@@ -1,12 +1,12 @@
 function checkTypeOf() {
-  console.log("null ", typeof null);
+  console.log('null ', typeof null);
   // null은 object로 반환한다. js의 버그이다.
   // type of 는  원시타입5개 + object + function 총 7개 형태로 반환한다.
   // null 타입은 반환하지 않는다.
   const temp = null;
   const obj = {};
   // temp의 타입은 object다.
-  console.log("temp의 타입은 ? ", typeof temp);
+  console.log('temp의 타입은 ? ', typeof temp);
   // false
   console.log(typeof temp === null);
   // true
@@ -28,12 +28,11 @@ function unaryFuncionts() {
   console.log(result, xx);
 }
 function implicitCast(params) {
-  
-  const string_1 = "1";
-  const string_2 = "2";
+  const string_1 = '1';
+  const string_2 = '2';
   const number_1 = 1;
   const number_2 = 2;
-  
+
   // -> 12
   console.log(string_1 + number_1);
   // -> 12
@@ -45,7 +44,7 @@ function implicitCast(params) {
   // 1false
   console.log(string_1 + false);
   // string
-  console.log(typeof(string_1 + true)); 
+  console.log(typeof (string_1 + true));
   // -> 2 true는 number 1로 변환
   console.log(number_1 + true);
   // -> 1 fals는 number 0으로 변환
@@ -61,10 +60,9 @@ function implicitCast(params) {
   console.log(string_1 === number_1);
 }
 function copyValue() {
-  
   let score = 80;
   // score의값 80이 할당
-  let copy = score
+  let copy = score;
   // -> true
   console.log(score === copy);
   score = 100;
@@ -72,8 +70,7 @@ function copyValue() {
   console.log(score === copy);
 }
 
-
 // unaryFuncionts();
-checkTypeOf();
-// implicitCast();
+// checkTypeOf();
 // copyValue();
+// implicitCast();

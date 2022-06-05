@@ -18,27 +18,29 @@ function checkFunction(obj) {
   console.log(obj?.printUser?.());
 }
 
-const info1 = {
-  user: 'kwon',
-  printUser() {
-    return this.user;
-  },
-};
-const info2 = {};
-// checkFunction(info1)
-// checkFunction(info2)
+function testObj(params) {
+  const info1 = {
+    user: 'kwon',
+    printUser() {
+      return this.user;
+    },
+  };
+  const info2 = {};
+  // checkFunction(info1)
+  // checkFunction(info2)
 
-// kwon
-console.log(info1.user);
-console.log(info1['user']);
-// error -> user is not defined
-// console.log(info1[user]);
-const key1 = 'user';
-console.log(info1[key1]);
+  // kwon
+  console.log(info1.user);
+  console.log(info1['user']);
+  // error -> user is not defined
+  // console.log(info1[user]);
+  const key1 = 'user';
+  console.log(info1[key1]);
+  // -> notValue
+  // shortEvaluation(NaN)
+  // => undefined (기본값으로 취환되지 않음.)
+  // isDefaultParams(NaN)
+  // arguments는 null은 test로 취환 -> notValue
+}
 
-// -> notValue
-// shortEvaluation(NaN)
-// => undefined (기본값으로 취환되지 않음.)
-// isDefaultParams(NaN)
-// arguments는 null은 test로 취환 -> notValue
 // isDefaultParams()
