@@ -714,7 +714,7 @@ If, for,{},function(){},switch, try...*catch*문
 코드가 어디서 실행되며 주변에 어떤 코드가 있는지를 렉시컬 환경이라고 한다.즉 코드의 문맥은 렉시컬 환경으로 이뤄진다.이를 구현한것이 실행 컨텍스트이며, 모든 코드는 실행 컨택스트에서 평가되고 실행된다.
 
 - 렉시컬 스코프 또는 정적 스코프 : 함수를 어디서 정의했는지에 따라 함수의 상위스코프를 결정한다.이는 함수정의가 평가되는 시점에 상위 스코프가 정적으로 결정된다.
-- 함수 정의된 스코프에서 상위 스코프를 결정.
+- 함수가 정의된 스코프에서 상위 스코프를 결정.
 
 ```javascript
 // 렉시컬 스코프: 함수의 선언된 위치에 따라 상위 스코프를 결정
@@ -822,12 +822,121 @@ function checkScope() {
   }
   ```
 
-#### var키워드의 문제점
+#### var키워드의 문제점	
 
 - 중복선언이 가능하다
+
 - 오로지 함수의 코드 블록만을 지역스크프로 인정한다.따라서 함수 외부에서 var키워드로 선언한 변수는 코드 블록 내에서 선언해도 모두 전역 변수가 된다.
   - var키워드로 선언한 전역 변수의 생명주기는 전역 객체의 생명주기와 일치하다.
+  
 - 변수 호이스팅에 의해 초기 undefined값이 할당된다.
 
+- ```javascript
+  function checkVar() {
+    // 실제 초기화전 undefined이 할당된다.
+    // -> undefined
+    console.log(i);
+    var i = 't';
+    // -> t
+    console.log(i);
+    for (var i = 0; i < 2; i++) {
+      // 1,2
+      console.log(i);
+    }
+    
+    // 현재 함수코드 블록에서 전체에서 공유되어 사용된다.
+    console.log(`for문 바깥스코프의 i ${i}`);
+  
+    var i = '이상해';
+    console.log(`var는 재선언 재할당도 가능하다. ${i}`);
+    {
+      var t = 't';
+    }
+    // 하위 스코프에 선언된 변수도 사용가능하다....
+    // -> t
+    console.log(t);
+  }
+  // !!error -> 오로지 함수의 코드 블록만을 지역스크프로 인정한다
+  console.log(t);
+  
+  ```
 
+- let 버전
+
+- ```javascript
+  // 함수 블록내 i변수와 전역스코프에 선언된 i변수는 다른변수이다.
+  let i="globalT"
+  function checkLet() {
+    // !!error
+    // Cannot access 'i' before initialization
+    // console.log(i);
+    let i = 't';
+    // -> t
+    console.log(i);
+    // for문의 블록 레벨 스코프
+    for (let i = 0; i < 2; i++) {
+      // 1,2
+      console.log(i);
+    }
+    // -> t
+    console.log(`for문 바깥스코프의 i ${i}`);
+  
+    {
+      let t = 't';
+    }
+    // !!error
+    // t is not defined
+    // 현재 렉시컬환경에 t라는 변수는 존재하지 않는다.
+    console.log(t);
+  }
+  ```
+
+  
+
+#### let과 const
+
+- 모든 코드블록을 지역스코프로 인정한다(일반적인 프로그래밍의 코드블록).
+
+- 선언 단계와 초기화 단계가 분리되어 진행된다.
+
+  - 런타임 이전에 자바스크립트 엔젠에 의해 암묵적으로 선언단계가 먼저 실행되고, 초기화 단계는 변수 선언문에 도달했을때 실행된다.
+
+  - 호이스팅이 일어나지 않는거 같지만 실제로는 일어나며 선언단계 <-> 초기화 단계 사이 일시적 `사각지대영역`이 있다.
+
+  - ```javascript
+    function checkLetHoisting() {
+      let isHoisting = '?';
+    
+      function check() {
+        // Cannot access 'isHoisting' before initialization
+        // 이는 함수 스코프내에서 호이스팅이 일어나 렉시컬체인 상위의 let으로 선언된 isHoisting 변수를 참조하지 않는다.
+        console.log(isHoisting);
+        const isHoisting = true;
+      }
+      check();
+    }
+    ```
+
+  - 키워드로 선언한 변수는 전역객체(브라우저 에서는 window)의 프로퍼티가 아닌다.
+
+  - ```javascript
+    var tt = 'tttttt';
+    let cc = 'cccccc';
+    // -> tttttt
+    console.log(window.tt);
+    // -> undefined
+    console.log(window.cc);
+    ```
+
+  - let은 재선언이 불가하면 재할당은 가능하다.
+
+  - const은 재선언 재할당 둘다 불가능하다.
+
+    - const는 선언과 함깨 값을 할당해주어야 한다.
+    - 상수처럼 사용가능하다.
+      - 원시값을 할당할 경우 -> 원시 값은 변경 불가능한 값이므로
+    - 객체를 할당할 경우 값을 변경 할 수 있다.
+      - 실제 참조주소는 변경되지 않지만, 참조된 객체의 값은 변경가능하다.
+
++++
 

@@ -77,3 +77,67 @@ function checkScopeHoisting() {
     let x = 2;
   }
 }
+
+// var의 문제점
+
+function checkVar() {
+  // 실제 초기화전 undefined이 할당된다.
+  // -> undefined
+  console.log(i);
+  var i = 't';
+  // -> t
+  console.log(i);
+  for (var i = 0; i < 2; i++) {
+    // 1,2
+    console.log(i);
+  }
+  // 현재 함수코드 블록에서 전체에서 공유되어 사용된다.
+  console.log(`for문 바깥스코프의 i ${i}`);
+
+  var i = '이상해';
+  console.log(`var는 재선언 재할당도 가능하다. ${i}`);
+  {
+    var t = 't';
+  }
+  // 하위 스코프에 선언된 변수도 사용가능하다....
+  // -> t
+  console.log(t);
+}
+//checkVar();
+function checkLet() {
+  // !!error
+  // Cannot access 'i' before initialization
+  // console.log(i);
+  let i = 't';
+  // -> t
+  console.log(i);
+  for (let i = 0; i < 2; i++) {
+    // 1,2
+    console.log(i);
+  }
+  // -> t
+  console.log(`for문 바깥스코프의 i ${i}`);
+
+  {
+    let t = 't';
+  }
+  // !!error
+  // t is not defined
+  // 현재 렉시컬환경에 t라는 변수는 존재하지 않는다.
+  console.log(t);
+}
+// checkLet();
+function checkLetHoisting() {
+  let isHoisting = '?';
+
+  function check() {
+    // Cannot access 'isHoisting' before initialization
+    // 이는 함수 스코프내에서 호이스팅이 일어나 렉시컬체인 상위의 let으로 선언된 isHoisting 변수를 참조하지 않는다.
+    console.log(isHoisting);
+    const isHoisting = true;
+  }
+
+  check();
+}
+
+// checkLetHoisting();
