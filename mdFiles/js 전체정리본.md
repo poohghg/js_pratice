@@ -940,3 +940,65 @@ function checkScope() {
 
 +++
 
+### 7.프로토타입(prototype)
+
+자바스크립트의 모든 객체는 객체간 상속을 위해 object라는 내부의 prototype 가지고 있다.
+
+- 자바스크립트의 내장된 기본 상태 및 함수이다.
+
+자바스크립트에서 객체간 상속의 연결고리는 프로토타입 체인으로 연결되어 있다
+
+- 배열 -> array -> object
+
+오브젝트의 각각의 프토퍼티는 프로퍼티 디스크립터라고 하는 객체로 저장되어 있다.
+
+자바스크립트 객체의 속성은 변경가능하다.
+
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperties
+
+- value: 객체속성의 값
+- writable: 값을 변경할수 있을지의 유무
+- enumerable: 속성을 열거가능한지
+- configurable: 속성이 삭제될수 있는지유무
+
+```javascript
+const obj1 = {
+  name: 'kwon',
+  age: 31,
+  desc() {
+    return `age:${this.age},name:${this.name}`;
+  },
+};
+// 객체의 권한을 수정해서 객체를 관리 할 수 있다.
+Object.defineProperties(obj1, {
+  name: {
+    writable: false,
+  },
+  age: {
+    value: 29,
+    enumerable: false,
+  },    
+}); 
+/**
+{
+  name: {
+    value: 'kwon',
+    writable: false,
+    enumerable: true,
+    configurable: true
+  },
+  age: { value: 29, writable: true, enumerable: false, configurable: true },
+  desc: {
+    value: [Function: desc],
+    writable: true,
+    enumerable: true,
+    configurable: true
+  }
+*/
+console.log(Object.getOwnPropertyDescriptors(obj1));
+
+
+```
+
+
+
