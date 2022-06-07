@@ -406,6 +406,8 @@ Nullish 병합 연산자 ??
 
 - **객체를 대괄호 연산자로 접근할 경우 반드시 따옴포로 감싼 문자열로 접근해야한다. `이는 자바스크립트 엔진이 식별자로 해석하기 때문이다.`**
 
+  - 식별자는 값이 될수 있다.
+
 - ```javascript
   // kwon
   console.log(info1["user"]);
@@ -917,7 +919,7 @@ function checkScope() {
     }
     ```
 
-  - 키워드로 선언한 변수는 전역객체(브라우저 에서는 window)의 프로퍼티가 아닌다.
+  - 키워드로 선언한 변수는 전역객체(브라우저 에서는 window)의 프로퍼티가 아니다.
 
   - ```javascript
     var tt = 'tttttt';
@@ -999,6 +1001,43 @@ console.log(Object.getOwnPropertyDescriptors(obj1));
 
 
 ```
+
+프로토타입 확인해보기
+
+- ```javascript
+  function checkProtoLevel(params) {
+    function Info(name, age) {
+      this.name = name;
+      this.age = age;
+      // 인스턴스 레벨의 함수
+      // 각각의 객체마다 함수를 생성해서 가지고 았다.
+      // 메모리상 비효율적.
+      // this.printinfo = function () {
+      //   return `name:${this.name}/age:${this.age}`;
+      // };
+    }
+    // 프로토타입의 함수를 생성하면, 프로타타입레벨의 함수를 가질수 있다.
+    Info.prototype.printUser = function () {
+      return `name:${this.name}/age:${this.age}`;
+    };
+    const kwon = new Info('kwon', 31);
+    const kim = new Info('kim', 27);
+    console.log(kwon);
+    console.log(kwon.printUser());
+  }
+  ```
+
+  
+
+- <img src="/Users/khg/Library/Application Support/typora-user-images/image-20220607230608685.png" alt="image-20220607230608685"  />
+
+- Dosa
+
+
+
+
+
+
 
 
 
