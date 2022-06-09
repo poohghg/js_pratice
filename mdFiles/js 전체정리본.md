@@ -944,24 +944,31 @@ function checkScope() {
 
 ### 7.프로토타입(prototype)
 
+참조
+
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperties
+
 자바스크립트의 모든 객체는 객체간 상속을 위해 object라는 내부의 prototype 가지고 있다.
 
 - 자바스크립트의 내장된 기본 상태 및 함수이다.
+- 직접 접근은 불가하지만, 내부슬롯의 경우 `__proto__`를통해 간접적으로 접근할 수 있다.
 
 자바스크립트에서 객체간 상속의 연결고리는 프로토타입 체인으로 연결되어 있다
 
 - 배열 -> array -> object
 
-오브젝트의 각각의 프토퍼티는 프로퍼티 디스크립터라고 하는 객체로 저장되어 있다.
-
 자바스크립트 객체의 속성은 변경가능하다.
 
-https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperties
+자바스크립트 엔진은 프로퍼티를 생성할 때 프로퍼티의 상태를 나타내는 프로퍼티 속성을 기본값으로 자동정의한다.
+
+#### 데이터 프로퍼티: 키와값으로 구성된 일반적인 프로퍼티.
 
 - value: 객체속성의 값
-- writable: 값을 변경할수 있을지의 유무
+- writable: 값을 변경할수 있을지의 유무(값의 갱신 가능 여부)
 - enumerable: 속성을 열거가능한지
-- configurable: 속성이 삭제될수 있는지유무
+  - -false 인경우 in, Object 문의 열거함수로 열거 할 수없다.
+
+- configurable: 속성이 삭제될수 있는지유무(재정의 가능 여부)
 
 ```javascript
 const obj1 = {
@@ -1002,6 +1009,35 @@ console.log(Object.getOwnPropertyDescriptors(obj1));
 
 ```
 
+#### 접근자 프로퍼티
+
+접근자 프로퍼티는 자체적으로 값을 갖지 않고 다른 데이터 프로퍼티의 값을 읽거나 저장할때 사용하는 접근자 함수로 구성된다.
+
+- ```javascript
+  // 접근자 프로퍼티
+  function accesoorProtp() {
+    const user = {
+      name: 'kwon',
+      age: 31,
+      get ageInfo() {
+        return `${this.age}`;
+      },
+      set ageInfo(age) {
+        this.age = age;
+      },
+    };
+  
+    // setter 호출
+    user.ageInfo = 33;
+    // getter 호출
+    console.log(user.ageInfo);
+  }
+  ```
+
+#### 프로퍼타입
+
+프로퍼타입은 어떤 객체의 상위 객체의 역할을 하는 객체다. 프로퍼타입은 하위 객체에게 자신의 프로퍼티와 메서드를 상속한다. 하위 객체는 상위 프로퍼타입의 프로퍼티 또는 메서드를 사용 할 수 있다. 프로퍼타입 체인은 단방향 링크드 리스트 형태로 구성되어 있다. 객체나 메서드에 접근하려 할때 해당 객체의 프로퍼티 또는 메서드가 없다면, 프로퍼타입 체인을 따라 상위 프로퍼타입을 검색한다.
+
 프로토타입 확인해보기
 
 - ```javascript
@@ -1031,13 +1067,127 @@ console.log(Object.getOwnPropertyDescriptors(obj1));
 
 - <img src="/Users/khg/Library/Application Support/typora-user-images/image-20220607230608685.png" alt="image-20220607230608685"  />
 
-- Dosa
+  #### 객체변경방지
+
+  - ```javascript
+    // 오브제트 프리징 -> 값의 읽기만 가능 나머지는 모두불가.
+    // 객체를 동결시킨다.
+    function immutabilityObj() {
+      // 오브젝트 동결시키기
+      const obj = {
+        name: 'kwon',
+        age: 31,
+        inner: {
+          a: 'a',
+          b: 'b',
+        },
+      };
+      // Prevents the modification of existing property attributes and values, and prevents the addition of new properties.
+      // 기존 프로퍼티의 속성(키)과 값을 수정(삭제,쓰기,재정의)을 방지하고, 새로운 속성을 추가하는것을 방지한다.
+    
+      Object.freeze(obj);
+      // age: { value: 31, writable: false, enumerable: true, configurable: false }
+      // console.log(Object.getOwnPropertyDescriptors(obj));
+      // 무시!!!!
+      delete obj.name;
+      obj.name = 'hi!';
+      obj.plus = '+';
+      // freeze도 얕은복사이다. 내부객체는 변경가능하다.
+      // freeze시 내부 객체의 경우 같은 참조값을 보고있다. 참조 객체의 값을 수정하면 같이 변경된다.
+      obj.inner.a = 'AA';
+      // -> { name: 'kwon', age: 31, inner: { a: 'AA', b: 'b' } }
+      console.log(obj.iss);
+      console.log(obj);
+    }
+    ```
+
+  - ```javascript
+    // 오브제트 seal -> 기본 오브젝트의 형태를 유지하지만, 값의 수정은 가능하다.
+    function sealObj() {
+      const obj = {
+        name: 'kwon',
+        age: 31,
+        inner: {
+          a: 'a',
+          b: 'b',
+        },
+      };
+      //Prevents the modification of attributes of existing properties, and prevents the addition 	of new properties.
+      // 속성은 변경불가 !! 값의 수정은 가능하다.
+      Object.seal(obj);
+      obj.name = 'HI!';
+      delete obj.name;
+      // -> { name: 'HI!', age: 31, inner: { a: 'a', b: 'b' } }
+      console.log(obj);
+      // seal되었는지 확인하다.
+      // console.log(Object.isSealed(obj));
+    }
+    ```
+
+  - 중첩객체(얕은방지)로 직속 프로퍼티만 변경이 방지되고 중첩 객체까지는 영향을 주지 못한다. 재귀적으로 호출하여 freeze하자. 
 
 
 
+#### 생성자 함수
 
+객체 리털리에 의한 객체생성 방식은 단 하나의 객체만 생성한다. 동일한 프로퍼티를 갖는 객체를 여러 개 생성해야 하는 경우 매번 같은 프로퍼티를 기술해야하기에 비효울적이다.
 
+생성자함수 : 객체(인스턴스)를 생성하는 함수.
 
+일반함수와 같이 정의하고, new 연산자와 함께 생성자 함수를 호출한다.
 
+- 인스턴스 생성과 this바인딩: 암묵적으로 빈 객체를 생성한다. -> 인스턴스는 this에 바인딩된다.
+- 다음 과정은 함수실행 이전 런타임에 실행된다.
 
+인스턴스 초기화 
+
+- this에 바인딩되어 있는 인스턴스에 프로퍼티나 메서드를 추가하고 생성자 함수가 인수로 전달받은 초기값을 할당하여 초기화하거나 고정값을 할당한다.
+
+인스턴스 반환
+
+- 생성자 함수의 모든 처리가 끝나면 완성된 인스턴스가 바인딩된 this가 암묵적으로 반환된다.
+- 만약 this가 아닌 다른 객체를 반환하면 this가 반환되지 못하고 retun문에 명시한 객체가 반환된다.
+- `생성자 함수에 명시적으로 return문을 사용하는것은 기본 동작을 훼손하다. 지양해야할 부분이다.` 
+
+```javascript
+// 기본 생성자 함수.
+function constructorFunction() {
+  function Info(name, age) {
+    const constant = 'constant';
+    this.name = name;
+    this.age = age;
+    this.greeting = '안녕하세요';
+    this.printInfo = function () {
+      return `${greeting} \n 이름은:${this.name}이고, 나이는:${this.age}입니다.`;
+    };
+    // return 값을 명시하면 명시된 값이 출력된다.
+    // ->{ name: 'kwon', age: 31 }
+    // return { name, age };
+  }
+
+  // this에 바인딩한 값들이 출력된다.
+  //   Info {
+  //   name: 'kwon',
+  //   age: 31,
+  //   greeting: '안녕하세요',
+  //   printInfo: [Function (anonymous)]
+  // }
+  const myInfo = new Info('kwon', 31);
+  console.log(myInfo);
+}
+```
+
+##### this 란?
+
+|        함수 호출 방식        |                 this가 가르키는것                 |
+| :--------------------------: | :-----------------------------------------------: |
+|      일반 함수로서 호출      | 전역 객체 브라우저 환경: window/ node환경: global |
+| 메서드로서 호출(객체 메서드) |               메서드를 호출한 객체                |
+|     생성자 함수로서 호출     |           생성자 함수가 생성할 인스턴스           |
+
+#### 내부 메서드 call과 construct
+
+- 함수는 객체이지만 일반 객체와는 다르다. 일반 객체는 호출할 수 업지만 함수는 호출 할 수 있다.
+- 함수가 일반 함수로서 호출되면 함수객체의 내부 메서드 call이 호출된다.
+  - new 연산자와 함께 생성자 함수로써 호출되면 내부 메서드 construct가 호출된다.
 

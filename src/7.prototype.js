@@ -1,3 +1,5 @@
+const { get } = require('lodash');
+
 // 프로터 타입 기본
 function checkProto() {
   const obj1 = {
@@ -32,6 +34,25 @@ function checkProto() {
   console.log(Object.getOwnPropertyDescriptors(obj1));
 }
 // checkProto();
+// 접근자 프로퍼티
+function accesoorProtp() {
+  const user = {
+    name: 'kwon',
+    age: 31,
+    get ageInfo() {
+      return `${this.age}`;
+    },
+    set ageInfo(age) {
+      this.age = age;
+    },
+  };
+
+  // setter 호출
+  user.ageInfo = 33;
+  // getter 호출
+  console.log(user.ageInfo);
+}
+// accesoorProtp();
 
 // 오브제트 프리징
 function immutabilityObj() {
@@ -48,11 +69,12 @@ function immutabilityObj() {
   // 기존 프로퍼티의 속성(키)과 값을 수정(삭제,쓰기,재정의)을 방지하고, 새로운 속성을 추가하는것을 방지한다.
 
   Object.freeze(obj);
-  console.log(obj);
-
   // age: { value: 31, writable: false, enumerable: true, configurable: false }
   // console.log(Object.getOwnPropertyDescriptors(obj));
+  // 무시!!!!
+  delete obj.name;
   obj.name = 'hi!';
+  obj.plus = '+';
   // freeze도 얕은복사이다. 내부객체는 변경가능하다.
   // freeze시 내부 객체의 경우 같은 참조값을 보고있다. 참조 객체의 값을 수정하면 같이 변경된다.
   obj.inner.a = 'AA';
@@ -62,8 +84,7 @@ function immutabilityObj() {
 }
 // immutabilityObj();
 
-// 오브제트 seal
-// 기본 오브젝트의 형태를 유지하지만, 값의 수정은 가능하다.
+// 오브제트 seal -> 기본 오브젝트의 형태를 유지하지만, 값의 수정은 가능하다.
 function sealObj() {
   const obj = {
     name: 'kwon',
@@ -79,12 +100,37 @@ function sealObj() {
   obj.name = 'HI!';
   delete obj.name;
   console.log(obj);
-
   // seal되었는지 확인하다.
-  // console.log(Object.isSealed(obj));
 }
+// sealObj();/
 
-// sealObj();
+// 기본 생성자 함수.
+function constructorFunction() {
+  function Info(name, age) {
+    const constant = 'constant';
+    this.name = name;
+    this.age = age;
+    this.greeting = '안녕하세요';
+    this.printInfo = function () {
+      return `${greeting} \n 이름은:${this.name}이고, 나이는:${this.age}입니다.`;
+    };
+    // return 값을 명시하면 명시된 값이 출력된다.
+    // ->{ name: 'kwon', age: 31 }
+    // return { name, age };
+  }
+
+  // this에 바인딩한 값들이 출력된다.
+  //   Info {
+  //   name: 'kwon',
+  //   age: 31,
+  //   greeting: '안녕하세요',
+  //   printinfo: [Function (anonymous)]
+  // }
+  const myInfo = new Info('kwon', 31);
+  console.log(myInfo);
+}
+constructorFunction();
+
 function checkProtoLevel(params) {
   function Info(name, age) {
     this.name = name;
@@ -113,7 +159,6 @@ function checkProtoLevel(params) {
   console.log(kwon.printUser());
 }
 // checkProtoLevel();
-
 function inheritancePrototype() {
   function Info(name, age) {
     this.name = name;
@@ -150,8 +195,8 @@ function inheritancePrototype() {
 
   Object.assign(IntroD.prototype, defaultObj);
   const test = new IntroD('kwon', 31, 'developer');
-  console.log(test);
+  console.log('test:', test);
   console.log(test.defaultDesc);
   console.log(test.defalutPrint());
 }
-inheritancePrototype();
+// inheritancePrototype();
