@@ -129,8 +129,50 @@ function constructorFunction() {
   const myInfo = new Info('kwon', 31);
   console.log(myInfo);
 }
-constructorFunction();
+// constructorFunction();
+function isConstructorFunction() {
+  //  위 세가지 표현식만이 생성자 함수이다.
+  function foo() {}
+  const constFoo = function () {};
+  // 프로퍼티의 값으로 할당된 함수는, 메서드가 아니다. 일반함수로 정의된 것이다.
+  const obj = {
+    x: function () {},
+  };
+  const newObj = new obj.x();
 
+  // 생성자 함수가 아닌 예시 x
+  // 생성자 함수가 아닌 함수를 new 연산자와 함께 사용하면 에러가 발생한다.
+  const obj1 = {
+    // 메서드
+    met() {},
+  };
+  const t = () => console.log('t');
+}
+// isConstructorFunction();
+
+function newTarget() {
+  function Info(name, age) {
+    //  new 연산자없이 호출되었는지 확인하여 없이 호출하였다면, 재귀 호출한다.
+    // if (!new.target) {
+    //   return new Info(name, age);
+    // }
+
+    // 스코프 세이프 생성자 팬턴
+    // new연산자와 함께 호출되면 this와 샘성자함수 객체는 프로토타입에 의해 연결된다.
+    // 만약 일반함수처럼 호출된다면, this는 전역객체가 소유하고 있다.
+    if (!(this instanceof Info)) {
+      return new Info(name, age);
+    }
+    this.name = name;
+    this.age = age;
+    this.print = function () {
+      return `이름은:${this.name}이고, 나이는:${this.age}입니다.`;
+    };
+  }
+  const user1 = Info('kim', 31);
+  console.log(user1);
+}
+newTarget();
 function checkProtoLevel(params) {
   function Info(name, age) {
     this.name = name;

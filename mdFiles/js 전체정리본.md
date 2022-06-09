@@ -957,8 +957,6 @@ https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects
 
 - 배열 -> array -> object
 
-자바스크립트 객체의 속성은 변경가능하다.
-
 자바스크립트 엔진은 프로퍼티를 생성할 때 프로퍼티의 상태를 나타내는 프로퍼티 속성을 기본값으로 자동정의한다.
 
 #### 데이터 프로퍼티: 키와값으로 구성된 일반적인 프로퍼티.
@@ -1188,6 +1186,56 @@ function constructorFunction() {
 #### 내부 메서드 call과 construct
 
 - 함수는 객체이지만 일반 객체와는 다르다. 일반 객체는 호출할 수 업지만 함수는 호출 할 수 있다.
+
 - 함수가 일반 함수로서 호출되면 함수객체의 내부 메서드 call이 호출된다.
+
   - new 연산자와 함께 생성자 함수로써 호출되면 내부 메서드 construct가 호출된다.
+
+- 모든 함수는 callable이지만 모든 함수 객체가 constructor인 것은 아니다.
+
+- ```javascript
+  function isConstructorFunction() {
+    //  위 세가지 표현식만이 생성자 함수이다.
+    function foo() {}
+    const constFoo = function () {};
+    // 프로퍼티의 값으로 할당된 함수는, 메서드가 아니다. 일반함수로 정의된 것이다.
+    const obj = {
+      x: function () {},
+    };
+    const newObj = new obj.x();
+  
+    // 생성자 함수가 아닌 
+    // 생성자 함수가 아닌 함수를 new 연산자와 함께 사용하면 에러가 발생한다.
+    const obj1 = {
+      // 메서드
+      met() {},
+    };
+    const t = () => console.log('t');
+  }
+  
+  ```
+
+- 일반 함수를 new 연산자와 사용하여 this또는 객체를 반환하지 않는다면 빈객체가 반환된다.
+
+- New 연산자 없이 생성자 함수로 호출하면 일반 함수로 호출된다.
+
+- ```javascript
+  function newTarget() {
+    function Info(name, age) {
+      //  new 연산자없이 호출되었는지 확인하여 없이 호출하였다면, 재귀 호출한다.
+      if (!new.target) {
+        return new Info(name, age);
+      }
+      this.name = name;
+      this.age = age;
+      this.print = function () {
+        return `이름은:${this.name}이고, 나이는:${this.age}입니다.`;
+      };
+    }
+    const user1 = Info('kim', 31);
+    console.log(user1);
+  }
+  ```
+
+  
 
