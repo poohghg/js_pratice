@@ -172,7 +172,7 @@ function newTarget() {
   const user1 = Info('kim', 31);
   console.log(user1);
 }
-newTarget();
+// newTarget();
 function checkProtoLevel(params) {
   function Info(name, age) {
     this.name = name;
@@ -180,9 +180,9 @@ function checkProtoLevel(params) {
     // 인스턴스 레벨의 함수
     // 각각의 객체마다 함수를 생성해서 가지고 았다.
     // 메모리상 비효율적.
-    // this.printinfo = function () {
-    //   return `name:${this.name}/age:${this.age}`;
-    // };
+    this.printinfo = function () {
+      return `name:${this.name}/age:${this.age}`;
+    };
   }
   // 프로토타입의 함수를 생성하면, 프로타타입레벨의 함수를 가질수 있다.
   // 동일한 프로토타입을 상속받는다.
@@ -191,16 +191,17 @@ function checkProtoLevel(params) {
   };
   const kwon = new Info('kwon', 31);
   const kim = new Info('kim', 27);
-  console.log(kwon);
-  console.log(kwon.printUser());
-
+  // 각각의 인스턴스는 다른 객체이다.
+  console.log(kwon === kim);
+  // 그러나 프로토타입 레벨의 함수는 공유되어 사용된다.
+  console.log(kwon.printUser === kim.printUser);
   // 오버라이딩또한 가능하다.
   kwon.printUser = function () {
     return `안녕하세요!! name:${this.name}/age:${this.age}`;
   };
   console.log(kwon.printUser());
 }
-// checkProtoLevel();
+checkProtoLevel();
 function inheritancePrototype() {
   function Info(name, age) {
     this.name = name;

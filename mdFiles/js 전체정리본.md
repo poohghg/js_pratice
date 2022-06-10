@@ -607,12 +607,70 @@ Nullish 병합 연산자 ??
 
 함수를 값처럼 자유롭게 사용할 수 있다.
 
+- 일급객체의 조건
+  - 무명의 리터럴로 생성할 수 있다.즉, 런타임에 생성이 가능하다.
+  - 변수나 자료구조에(객체,배열)에 저장할 수 있다.
+  - 함수의 매개변수에 전달할 수 있다.
+  - 함수의 반환값으로 사용할 수 있다.
+
 - 일반 객체처럼 모든 연산이 가능한것
   - 함수를 매개변수로 전달할 수 있음. -> 함수의 참조값 전달
   - 함수를 반환값 으로 사용할 수 있음.
-  - 함수를 할당할 변수에 할당 할 수 있음(함수 표현식).
+  - 함수를 변수에 할당 할 수 있음(함수 표현식).
   - 동일비교 대상
   - 객체의 프로퍼티값이 될 수도 있으며, 배열의 요소가 될 수 있다.
+
+함수가 일급 객체라는 것은 함수를 객체와 동일하게 사용할 수 있다는 의미다.
+
+그러나 일반객체는 호출할 수 없지만, 함수 객체는 호출할 수 있다.그리고 함수 객체는 일반 객체에는 없는 함수 고유의 프로퍼티를 소유한다.
+
+```javascript
+// ->undefined __proto__는 함수의 프로퍼티가 아니다.
+// 배열
+//console.log(Object.getOwnPropertyDescriptor(firstClassObject, '__proto__'));
+// 함수의 프로퍼티
+console.log(Object.getOwnPropertyDescriptors(firstClassObject));
+```
+
+![image-20220610222217657](/Users/khg/Library/Application Support/typora-user-images/image-20220610222217657.png)
+
+```javascript
+function confirmFuncionProto(a) {
+  // arguments는 유사배열 객체이다.
+  // 함수 호출시 전달된 인수이다.
+  // 매개변수와 일치하지 않는다.
+  // -> [Arguments] { '0': 1, '1': 2, '2': 3, '3': 4, '4': 5 }
+  console.log(arguments);
+  // 만약 초과된 인수는 undefined으로 초기화된다.
+  
+  // rest나 전개연산자로 배열화가능.
+  console.log([...arguments]);
+}
+
+```
+
+- 유사배열 객체와 이터러블
+
+  - es6에서 도입된 이터레이션 프로토콜을 준수하면, 순회 가능한 자료구조인 이터러블이 된다.
+  - 유사배열 객체는 배열이 아니다, 배열 메서드를 사용할 경우 에러가 발생한다.
+  - call 또는 apply을 적용하거나 loop 메서드를 사용
+
+- 함수객체의 name
+
+  - 기본적으로 함수의 이름을 나타낸디.
+
+  - es6 에서는 익명함수 객체를 가리키는 식별자를 값으로 갖는다.
+
+  - 함수 이름과 함수 객체를 가르키는 식별자는 의미가 다르다. 함수를 호출할 때는 함수 이름이 아닌 함수 객체를 가르키는 식별자로 호출한다.
+
+  - ```javascript
+    const confirmF = confirmFuncionProto;
+    const nameF = () => {};
+    // -> confirmFuncionProto
+    console.log(confirmF.name);
+    // -> nameF
+    console.log(nameF.name);
+    ```
 
 #### 고차함수
 
@@ -633,7 +691,7 @@ Nullish 병합 연산자 ??
 
 함수내부에서 외부로부터 주어진 인자의 값을 변경하는것은 추천하지 않는다.
 
-- 원식 타입의 경우(변경불가능) 재할당을통해 값을 변경하기에 상관없음.
+- 원식 타입의 경우(변경불가능) 재할당을 통해 값을 변경하기에 상관없음.
 - 반면 객체 타입의 경우 참조에 의한 전달이기에 언제든 객체데이터의 변경이 가능하다.
 - 객체의 경우 참조에 의한 복사임으로 외부로부터 주어진 객체를 함부로 변경하지말자.
   - 객체변경에 따른 코드추적이 어려워 질수 있다.
@@ -944,9 +1002,13 @@ function checkScope() {
 
 ### 7.프로토타입(prototype)
 
-참조
-
 https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperties
+
+<u>**자바스크립트는 명령형,함수형,프로토타입 기반 객체지향 프로그래밍을 지원하는 멀티 패러다임 프로그래밍 언어이다.**</u>
+
+**<u>자바스크립트는 객체기반의 프로그래밍 언어이며 자바스크립트를 이루고 있는 원식타입을 제외한 모든값들은 객체로 구성되어 있다.</u>**
+
+
 
 자바스크립트의 모든 객체는 객체간 상속을 위해 object라는 내부의 prototype 가지고 있다.
 
@@ -1057,12 +1119,11 @@ console.log(Object.getOwnPropertyDescriptors(obj1));
     const kwon = new Info('kwon', 31);
     const kim = new Info('kim', 27);
     console.log(kwon);
-    console.log(kwon.printUser());
   }
   ```
-
   
-
+  
+  
 - <img src="/Users/khg/Library/Application Support/typora-user-images/image-20220607230608685.png" alt="image-20220607230608685"  />
 
   #### 객체변경방지
@@ -1185,7 +1246,7 @@ function constructorFunction() {
 
 #### 내부 메서드 call과 construct
 
-- 함수는 객체이지만 일반 객체와는 다르다. 일반 객체는 호출할 수 업지만 함수는 호출 할 수 있다.
+- 함수는 객체이지만 일반 객체와는 다르다. 일반 객체는 호출할 수 없지만 함수는 호출 할 수 있다.
 
 - 함수가 일반 함수로서 호출되면 함수객체의 내부 메서드 call이 호출된다.
 
@@ -1204,17 +1265,18 @@ function constructorFunction() {
     };
     const newObj = new obj.x();
   
-    // 생성자 함수가 아닌 
+    // 생성자 함수가 아닌 함수
     // 생성자 함수가 아닌 함수를 new 연산자와 함께 사용하면 에러가 발생한다.
     const obj1 = {
       // 메서드
       met() {},
     };
+    // 애로우 함수
     const t = () => console.log('t');
   }
   
   ```
-
+  
 - 일반 함수를 new 연산자와 사용하여 this또는 객체를 반환하지 않는다면 빈객체가 반환된다.
 
 - New 연산자 없이 생성자 함수로 호출하면 일반 함수로 호출된다.
@@ -1226,16 +1288,68 @@ function constructorFunction() {
       if (!new.target) {
         return new Info(name, age);
       }
+     
+      // 스코프 세이프 생성자 팬턴
+      // new연산자와 함께 호출되면 this와 샘성자함수 객체는 프로토타입에 의해 연결된다.
+      // 만약 일반함수처럼 호출된다면, this는 전역객체가 소유하고 있다.
+      if (!(this instanceof Info)) {
+        return new Info(name, age);
+      }
+      
       this.name = name;
       this.age = age;
       this.print = function () {
         return `이름은:${this.name}이고, 나이는:${this.age}입니다.`;
       };
     }
+    // new연산자 없이 사용
     const user1 = Info('kim', 31);
     console.log(user1);
   }
   ```
-
   
+
+#### 상속
+
+모든 객체는 prototype 이라는 내부슬롯이 있고,이 내부 슬롯의 값은 프로토타입의; 참조값이다.
+
+```javascript
+function checkProtoLevel(params) {
+  function Info(name, age) {
+    this.name = name;
+    this.age = age;
+    // 인스턴스 레벨의 함수
+    // 각각의 객체마다 함수를 생성해서 가지고 았다. -> 메모리상 동일한 함수가 각각의 인스턴스에서 사용된다.
+    this.printinfo = function () {
+      return `name:${this.name}/age:${this.age}`;
+    };
+  }
+  
+  // 프로토타입의 함수를 생성하면, 프로타타입객체 레벨의 함수를 생성할 수 있다.
+  Info.prototype.printUser = function () {
+    return `name:${this.name}/age:${this.age}`;
+  };
+  const kwon = new Info('kwon', 31);
+  const kim = new Info('kim', 27);
+  // 각각의 인스턴스는 다른 객체이다.
+  // -> false
+  console.log(kwon === kim);
+  // 그러나 프로토타입 레벨의 함수는 공유되어 사용된다.
+  // -> true
+  console.log(kwon.printUser === kim.printUser);
+  // 오버라이딩또한 가능하다.
+  // -> 안녕하세요!! name:kwon/age:31
+  kwon.printUser = function () {
+    return `안녕하세요!! name:${this.name}/age:${this.age}`;
+  };
+  console.log(kwon.printUser());
+}
+```
+
+prototype 프로퍼티는 생성자 함수가 생성할 인스턴스 객체의 프로토타입을 가리킨다. 따라서 생성자 함수만이 prototype을 소유한다.
+
+|             구분             | 소유        | 값                | 사용주체    | 사용 목적                                                    |
+| :--------------------------: | ----------- | ----------------- | ----------- | ------------------------------------------------------------ |
+| `__proto__ ` 접근자 프로퍼티 | 모든객체    | 프로토타입의 참조 | 모든 객체   | 객체가 자신의 프로토타입에 접근 또는 교체하기 위해 사용      |
+|      prototype 프로퍼티      | Constructor | 프로토타입의 참조 | 생성자 함수 | 생성자 함수가 자신이 생성할 객체 인스턴스의 프로토타입을 할당하기 위해 사용 |
 
