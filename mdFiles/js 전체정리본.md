@@ -738,7 +738,7 @@ console.log(outerFuncion([1,2,3,4,5]));
 
 > 현재 실행 컨텍스트입니다. [값](https://developer.mozilla.org/en-US/docs/Glossary/Value) 과 **표현식** 이 "표시"되거나 참조될 수 있는 컨텍스트입니다 . 변수 또는 기타 표현식이 "현재 범위에" 있지 않으면 사용할 수 없습니다.범위는 계층 구조로 계층화될 수도 있으므로 하위 범위가 상위 범위에 액세스할 수 있지만 그 반대는 불가능합니다.
 >
-> **[함수](https://developer.mozilla.org/en-US/docs/Glossary/Function)** 는 [JavaScript](https://developer.mozilla.org/en-US/docs/Glossary/JavaScript) 에서 **클로저** 역할을 하므로 범위를 생성하므로 (예를 들어) 함수 내에서만 독점적으로 정의된 변수는 함수 외부 또는 다른 함수 내에서 액세스할 수 없습니다. 예를 들어 다음은 유효하지 않습니다.
+> **[함수](https://developer.mozilla.org/en-US/docs/Glossary/Function)** 는 [JavaScript](https://developer.mozilla.org/en-US/docs/Glossary/JavaScript) 에서 **클로저** 역할을 하므로 범위를 생성하므로 (예를 들어) 함수 내에서만 독점적으로 정의된 변수는 함수 외부 또는 다른 함수 내에서 액세스할 수 없습니다.
 >
 > ---https://developer.mozilla.org/en-US/docs/Glossary/Scope
 
@@ -1013,11 +1013,13 @@ https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects
 자바스크립트의 모든 객체는 객체간 상속을 위해 object라는 내부의 prototype 가지고 있다.
 
 - 자바스크립트의 내장된 기본 상태 및 함수이다.
-- 직접 접근은 불가하지만, 내부슬롯의 경우 `__proto__`를통해 간접적으로 접근할 수 있다.
+- 직접 접근은 불가하지만, 내부슬롯의 경우 `__proto__` 접근자 프로퍼티를 통해 간접적으로 접근할 수 있다.
 
 자바스크립트에서 객체간 상속의 연결고리는 프로토타입 체인으로 연결되어 있다
 
 - 배열 -> array -> object
+
+
 
 자바스크립트 엔진은 프로퍼티를 생성할 때 프로퍼티의 상태를 나타내는 프로퍼티 속성을 기본값으로 자동정의한다.
 
@@ -1219,6 +1221,7 @@ function constructorFunction() {
     this.printInfo = function () {
       return `${greeting} \n 이름은:${this.name}이고, 나이는:${this.age}입니다.`;
     };
+    
     // return 값을 명시하면 명시된 값이 출력된다.
     // ->{ name: 'kwon', age: 31 }
     // return { name, age };
@@ -1288,7 +1291,6 @@ function constructorFunction() {
       if (!new.target) {
         return new Info(name, age);
       }
-     
       // 스코프 세이프 생성자 팬턴
       // new연산자와 함께 호출되면 this와 샘성자함수 객체는 프로토타입에 의해 연결된다.
       // 만약 일반함수처럼 호출된다면, this는 전역객체가 소유하고 있다.
@@ -1311,7 +1313,9 @@ function constructorFunction() {
 
 #### 상속
 
-모든 객체는 prototype 이라는 내부슬롯이 있고,이 내부 슬롯의 값은 프로토타입의; 참조값이다.
+상속은 객체지향 프로그래밍의 핵심 개념으로, 어떤 객체의 프로퍼티 또는 메서드를 다른 객체가 그대로 상속받아 사용할 수 잇는 것을 말한다.자바스크립트는 프로토타입을 기반으로 상속을 구현하여 불필요한 중복을 제거한다.
+
+모든 객체는 prototype 이라는 내부슬롯이 있고,이 내부 슬롯의 값은 프로토타입의 참조값이다.
 
 ```javascript
 function checkProtoLevel(params) {
@@ -1326,6 +1330,7 @@ function checkProtoLevel(params) {
   }
   
   // 프로토타입의 함수를 생성하면, 프로타타입객체 레벨의 함수를 생성할 수 있다.
+  // 이는 프로토타입 프토퍼티에 바인딩되어 사용할 수 있다.
   Info.prototype.printUser = function () {
     return `name:${this.name}/age:${this.age}`;
   };
@@ -1342,14 +1347,45 @@ function checkProtoLevel(params) {
   kwon.printUser = function () {
     return `안녕하세요!! name:${this.name}/age:${this.age}`;
   };
-  console.log(kwon.printUser());
 }
 ```
 
-prototype 프로퍼티는 생성자 함수가 생성할 인스턴스 객체의 프로토타입을 가리킨다. 따라서 생성자 함수만이 prototype을 소유한다.
+각각의 인스턴스는 생성자 함수에 의해 prototype 속성을 상속받는다. 
+
+![image-20220612224510412](/Users/khg/Library/Application Support/typora-user-images/image-20220612224510412.png)
+
+##### 프로토타입 객체
+
+프로토타입 객체란 객체지행 프로그래밍의 근간을 이루는 객첵 간 상속을 구현하기 위해 사용된다. 프로토타입은 어떤 객체의 상위(부모)객체의 역할을 하는 객체로서 다른객체에 공유 프로퍼티를 제공한다. 프로토타입을 상속받은 하위 객체는 상위 객체의 프로퍼티를 자신의 프로퍼티처럼 자유롭게 사용할 수 있다.
+
+- 모든 객체는 하나의 프로토타입을 갖는다. 그리고 모든 프로토타입은 생성자 함수와 연결되어 있다
+
+
+
+접근자 프로퍼티 `__proto__ `는 object.prototype의 프로퍼티다. 모든 객체는 상속을 통해 접근자 프로퍼티를 사용할 수 있다.
+
+- get/set으로 이루어줘 있음
+
+- Object.setPrototypeOf(obj, 상속받을 obj)을 통해 프로터타입을 교체 할 수 있다.
+
+  
+
+prototype 프로퍼티(속성)는 생성자 함수가 생성할 인스턴스 객체의 프로토타입을 가리킨다. **<u>따라서 생성자 함수만이 prototype을 소유한다.</u>**
 
 |             구분             | 소유        | 값                | 사용주체    | 사용 목적                                                    |
 | :--------------------------: | ----------- | ----------------- | ----------- | ------------------------------------------------------------ |
 | `__proto__ ` 접근자 프로퍼티 | 모든객체    | 프로토타입의 참조 | 모든 객체   | 객체가 자신의 프로토타입에 접근 또는 교체하기 위해 사용      |
 |      prototype 프로퍼티      | Constructor | 프로토타입의 참조 | 생성자 함수 | 생성자 함수가 자신이 생성할 객체 인스턴스의 프로토타입을 할당하기 위해 사용 |
+
+모든 프로토타입은 constructor프로퍼티를 갖는다. 이 constructor 프로퍼티는 프로토타입 프로퍼티로 자신을 참조하고 있는 생성자 함수를 가리킨다.이 연결은 생성장 함수가 생성될 때, 즉 함수 객체가 생성될 때 이뤄진다.
+
+- constructor가 가리키는 것은 생성자 함수이고, 생성자 함수는 인스턴스를 생성한 생성자 함수이다.
+
+- 생성자 함수에는 자기자신의 프로퍼티가 정의되어 있고, 생성자함수에 의해 생성된 인스턴스는 prototype 프로퍼티을 통해 부모 속성을 사용할 수 있다.
+
+리터럴 표기법으로 의해 생성된 객체는 생성자 함수로 생성된게 아닌다. 하지만 constructor와 연결되어 있다.
+
+프로토타입 체인: 자바스크립트는 객체의 프로퍼티에 접근하려 할 때 해당 객체에 접근하려는 프로퍼타가 없다면, 내부슬롯 참조에 따라 자신의 부모 역할을 하는 프로퍼타입의 프로퍼티를 순차적으로 검색한다.
+
+ 
 

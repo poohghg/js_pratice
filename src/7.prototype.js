@@ -1,5 +1,3 @@
-const { get } = require('lodash');
-
 // 프로터 타입 기본
 function checkProto() {
   const obj1 = {
@@ -129,6 +127,7 @@ function constructorFunction() {
   const myInfo = new Info('kwon', 31);
   console.log(myInfo);
 }
+
 // constructorFunction();
 function isConstructorFunction() {
   //  위 세가지 표현식만이 생성자 함수이다.
@@ -173,6 +172,7 @@ function newTarget() {
   console.log(user1);
 }
 // newTarget();
+
 function checkProtoLevel(params) {
   function Info(name, age) {
     this.name = name;
@@ -199,9 +199,11 @@ function checkProtoLevel(params) {
   kwon.printUser = function () {
     return `안녕하세요!! name:${this.name}/age:${this.age}`;
   };
-  console.log(kwon.printUser());
+  console.log(kwon);
+  console.log(kim);
 }
-checkProtoLevel();
+// checkProtoLevel();
+
 function inheritancePrototype() {
   function Info(name, age) {
     this.name = name;
@@ -223,6 +225,9 @@ function inheritancePrototype() {
     return `desc: ${this.desc}`;
   };
 
+  const kwon = new IntroD();
+  Object.setPrototypeOf(kwon, Info);
+
   // const kwonD = new IntroD('kwon', 31, 'developer');
   // console.log(kwonD);
   // console.log(kwonD.printUser());
@@ -243,3 +248,14 @@ function inheritancePrototype() {
   console.log(test.defalutPrint());
 }
 // inheritancePrototype();
+
+function testConstructor() {
+  function Person(name) {
+    this.name = name;
+  }
+  const me = new Person('KIM');
+  // -> true
+  console.log(me.constructor === Person);
+  console.log(me);
+}
+testConstructor();
