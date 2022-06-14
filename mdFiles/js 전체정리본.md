@@ -1387,5 +1387,218 @@ prototype 프로퍼티(속성)는 생성자 함수가 생성할 인스턴스 객
 
 프로토타입 체인: 자바스크립트는 객체의 프로퍼티에 접근하려 할 때 해당 객체에 접근하려는 프로퍼타가 없다면, 내부슬롯 참조에 따라 자신의 부모 역할을 하는 프로퍼타입의 프로퍼티를 순차적으로 검색한다.
 
+#### 정적 프로퍼티
+
+생성자 함수 또한 객체임으로 자기자신의 속성값을 가질수 있다 이를 정적프로퍼티라 한다.인스턴스는 프로토타입 체인에 속하지 않는 정적메서드에는 접근이 불가하다.
+
+```javascript
+function testStatic(params) {
+  function Obj(name) {
+    const staticA = 'A';
+    this.name = name;
+  }
+  Obj.staticB = 'B';
+  const obj1 = new Obj('test1');
+  // -> obj1.staticA:"undefined
+  console.log(`obj1.staticA:"${obj1.staticA}`);
+  // console.log(`obj1.staticb:"${obj1.staticB}`);
+  console.log(`obj1.staticb:"${obj1.name}`);
+}
+```
+
  
+
+***
+
+### 8.strice mode(엄격모드)
+
+자바스크립트 언어의 문법을 좀 더 엄격히 적용하여 오류를 발생시킬 가능성이 높거나 자바스크립트 엔진의 최적화 작업에 문제를 일으킬 수 있는 코드에 대해 명시적인 에러를 발생시킨다.
+
+Eslint 같은 린트 도구를 사용해도 유사한 효과를 얻을 수 있다.린트 도구는 정적분석 기능을 통해 소스코드를 실행하기 전에 소스코드를 스캔하여 문법적 오류만이 아니라 잠재적 오류까지 찾아내고 오류의 원인을 리포팅해준다.
+
+
+
+
+
+***
+
+### 9.this 키워드
+
+this는 자신이 속한 객체 또는 인스턴스를 가르키는 자기 참조 변수다.this를 통해 자신이 속한 객체 또는 자신이 생성할 인스턴스의 프로퍼티와 메서드를 참조할 수 있다.this는 자바스크립트 엔진에 의해 암묵적으로 생성된다. 코드 어디서든 참조할 수 있다.`단 this가 가르키는 값, 즉 this의 바인딩은 함수 호출 방식에 의해 동적으로 결정된다.`  
+
+- 바인딩은 식별자와 값을 연결하는 과정이다.
+
+  |        함수 호출 방식        |                 this가 가르키는것                 |
+  | :--------------------------: | :-----------------------------------------------: |
+  |      일반 함수로서 호출      | 전역 객체 브라우저 환경: window/ node환경: global |
+  | 메서드로서 호출(객체 메서드) |               메서드를 호출한 객체                |
+  |     생성자 함수로서 호출     |           생성자 함수가 생성할 인스턴스           |
+
+- this는 일반적으로 자기 참조 변수임으로, `strict mode가 적용된 일반 함수 내부의 this에서는 undefined가 반환된다.`  
+
+#### 함수 호출방식과 this바인딩
+
+- 렉시컬 스코프와 this바인딩의 결정시기는 다르다.
+
+  - 렉시컬 스코프는 함수가 정의된곳 상위 스코프를 결정한다, 하지만 this 바인딩은 함수 호출 시점에 결정된다.
+
+- 일반 함수로 호출된 모든 함수(중첩함수,콜백함수) `내부의 this에는 전역 객체가 바인딩된다.`
+
+- ```javascript
+  var v = 100;
+  function basicThis() {
+    const obj = {
+      v: 10,
+      printV: function () {
+        function innerF() {
+          console.log(`중첨함수 에서 this는? ${this.v}`);
+        }
+        //일반함수로 호출 -> 전역변수 100
+        innerF();
+        console.log(`내부에서 this는? ${this.v}`);
+      },
+    };
+    // 객체의 프로퍼티로 호출 ->10
+    obj.printV();
+  }
+  basicThis();
+  ```
+
+  ```javascript
+  function bindThis() {
+    const obj = {
+      v: 10,
+      t: 15,
+      printV: function () {
+        // 명시적으로 this를 바인딩.
+        const that = this;
+        function innerF() {
+          // ->15
+          console.log(`t는 ${that.t}`);
+          // ->10
+          console.log(`중첨함수 에서 this는? ${that.v}`);
+        }
+        innerF();
+        console.log(`내부에서 this는? ${this.v}`);
+      },
+    };
+    
+    const obj1 = {
+      v: 1,
+      print() {
+        // 화살표 함수 냄부의 this는 상위 스코프의 this를 가르킨다.
+        setTimeout(() => console.log(this.v), 10);
+      },
+    };
+    
+    const obj2 = {
+      v: 1,
+      print() {
+        // 화살표 함수 냄부의 this는 상위 스코프의 this를 가르킨다.
+        setTimeout(
+          function () {
+            console.log(this.v);
+          }.bind(this),
+          10,
+        );
+      },
+    };
+  }
+  ```
+
+- Apply,bind,claa을 사용하여 명시 할수도 있다.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+***
+
+
+
+### 기타정리 부분
+
+#### 1.래퍼객체
+
+문자열,불리언,숫자 등의 원시값에 문자열,숫자,블리언 객체를 생성하는 표준비틀인 생성자 함수가 있는이유?
+
+- ```javascript
+  function basicWraper(params) {
+    const str = 'string?';
+    //->7
+    console.log(str.length);
+    // ->STRING?
+    console.log(str.toUpperCase());
+  }
+  ```
+
+- 원시값을 객체처럼 사용하면 자바스크립트 엔진은 암묵적으로 연관된 객체를 생성하여 생성된 객체로 프로퍼티에 접근허거나 메서드를 호출하고 다시 원시값으로 되돌린다.
+- 이처럼 문자열,불리언,숫자 값에 대해 객체처럼 접근하면 생성되는 객체를 임시객체(래퍼객체)라 한다.
+
+#### 2.전역객체
+
+전역객체는 코드가 실행되기 이전 단계에 자바스크립트 엔진에 의해 가장 먼저 생성되는 특수한 객치에디.
+
+- 브라우저 환경에서 전역객체
+
+  - window,this,self,frames
+
+- 노드 환경에서 전역객체
+
+  - this.global
+
+- 전역객체는 계층적 구조상 어떤 객체에도 속하지 않은 모든 빌츠인 객체의 최상위 객체이다.
+
+  - 이는 프로퍼타입 상속 관계상에서 최상위 객체라는 의미가 아니라, 계층적 구조상 표준 빑트인 객체와 호스트 객체를 프로퍼티로 소유한다는 것을 의미한다.
+
+- 전역객체는 의도적으로 생성할 수 없다.
+
+- 참조시 window,global등의 생략이 가능하다.
+
+- 표준빌트인 객체를 프로퍼티로 가지고 있다.
+
+- var키워드, 전역 함수는 전역 객체의 프로퍼티가 된다.
+
+- Let,const는 전역객체의 프로퍼티가 아니다.이는 전역 레시컬 환경의 선언적 환경레코드 내에 존재한다.
+
+- ```javascript
+  var foo = 'foo';
+  function basicWraper(params) {
+    const str = 'string?';
+    // console.log(str.length);
+    // console.log(str.toUpperCase());
+    // 해당 코드가 실행되면 암뭄적전역으로 전역객체의 프로퍼티가 된다.
+    y = 10;
+  }
+  basicWraper();
+  // 브라우저에서는 window.foo가 출력됨.
+  console.log(window.foo);
+  // 암뭄적 전역
+  // 브라우저에서는 10이 출력된다.
+  console.log(y);
+  ```
+
+  
+
+
 

@@ -258,4 +258,19 @@ function testConstructor() {
   console.log(me.constructor === Person);
   console.log(me);
 }
-testConstructor();
+// testConstructor();ㄴ
+
+function testStatic(params) {
+  function Obj(name) {
+    const staticA = 'A';
+    this.name = name;
+  }
+  Obj.staticB = 'B';
+  const obj1 = new Obj('test1');
+  // -> obj1.staticA:"undefined
+  console.log(`obj1.staticA:"${obj1.staticA}`);
+  // console.log(`obj1.staticb:"${obj1.staticB}`);
+  console.log(`obj1.staticb:"${obj1.name}`);
+}
+
+testStatic();
