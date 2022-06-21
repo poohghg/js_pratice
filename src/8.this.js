@@ -16,7 +16,6 @@ function basicThis() {
 }
 // basicThis();
 function bindThis() {
-  wk;
   const obj = {
     v: 10,
     t: 15,
@@ -44,7 +43,7 @@ function bindThis() {
   const obj2 = {
     v: 1,
     print() {
-      // 화살표 함수 냄부의 this는 상위 스코프의 this를 가르킨다.
+      // 바인드를 통해 this를 연결한다.
       setTimeout(
         function () {
           console.log(this.v);
@@ -53,6 +52,45 @@ function bindThis() {
       );
     },
   };
-  obj2.print();
+  // obj2.print();
+
+  function Info(name) {
+    this.name = name;
+    this.printName = function () {
+      console.log(`name:${this.name}`);
+    }.bind(this);
+  }
+  const kwon = new Info('kwon');
+  function printCallBack(callBack) {
+    callBack();
+  }
+  printCallBack(kwon.printName);
 }
 bindThis();
+
+function constructorFunction() {
+  function Info(name) {
+    this.name = name;
+    this.printName = function () {
+      console.log(`name:${name}`);
+    };
+  }
+  const kwon = new Info('kwon');
+  kwon.printName();
+}
+// constructorFunction();
+function dynamicBinding() {
+  function Info(name) {
+    this.name = name;
+    this.printName = function () {
+      console.log(`name:${this.name}`);
+    };
+  }
+  const kwon = new Info('kwon');
+  function printCallBack(callBack) {
+    callBack();
+    // console.log('printCallBack:');
+  }
+  printCallBack(kwon.printName);
+}
+// dynamicBinding();

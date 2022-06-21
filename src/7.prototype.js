@@ -256,7 +256,6 @@ function testConstructor() {
   const me = new Person('KIM');
   // -> true
   console.log(me.constructor === Person);
-  console.log(me);
 }
 // testConstructor();ㄴ
 

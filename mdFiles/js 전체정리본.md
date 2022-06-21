@@ -600,6 +600,8 @@ Nullish 병합 연산자 ??
 
 - 생성자 함수로 사용할 수 없다.
 - 기존 함수와 this 바인딩 방식이 다르다.
+  - 함수 선언시 선언된 상위 렉시컬환경의 this를 바인딩한다..
+
 - Prototype 프로퍼티가 없다.
 - arguments 객체를 생성하지 않는다.
 
@@ -855,7 +857,7 @@ function checkScope() {
 
 자바스크립트 엔진이 코드를 실행하기 전, 변수,함수,클래스의 선언문을 코드 최상단으로 끌어올리는것
 
-- 런타임 이전에 변수는 할당이됨.
+- 런타임 이전에 변수는 할당이된다.
 
 변수의 선언과 초기화를 분리한 후, 선언만 코드의 최상단으로 옮김
 
@@ -1222,11 +1224,11 @@ function constructorFunction() {
       return `${greeting} \n 이름은:${this.name}이고, 나이는:${this.age}입니다.`;
     };
     
-    // return 값을 명시하면 명시된 값이 출력된다.
+    // return 문을 명시하면 명시된 값이 출력된다.
     // ->{ name: 'kwon', age: 31 }
     // return { name, age };
   }
-
+  const myInfo = new Info('kwon', 31);
   // this에 바인딩한 값들이 출력된다.
   //   Info {
   //   name: 'kwon',
@@ -1234,7 +1236,6 @@ function constructorFunction() {
   //   greeting: '안녕하세요',
   //   printInfo: [Function (anonymous)]
   // }
-  const myInfo = new Info('kwon', 31);
   console.log(myInfo);
 }
 ```
@@ -1263,6 +1264,7 @@ function constructorFunction() {
     function foo() {}
     const constFoo = function () {};
     // 프로퍼티의 값으로 할당된 함수는, 메서드가 아니다. 일반함수로 정의된 것이다.
+    // 함수
     const obj = {
       x: function () {},
     };
@@ -1401,7 +1403,9 @@ function testStatic(params) {
   const obj1 = new Obj('test1');
   // -> obj1.staticA:"undefined
   console.log(`obj1.staticA:"${obj1.staticA}`);
-  // console.log(`obj1.staticb:"${obj1.staticB}`);
+  // -> obj1.staticA:"undefined
+  console.log(`obj1.staticb:"${obj1.staticB}`);
+  // -> test1
   console.log(`obj1.staticb:"${obj1.name}`);
 }
 ```
@@ -1428,19 +1432,23 @@ this는 자신이 속한 객체 또는 인스턴스를 가르키는 자기 참�
 
 - 바인딩은 식별자와 값을 연결하는 과정이다.
 
-  |        함수 호출 방식        |                 this가 가르키는것                 |
-  | :--------------------------: | :-----------------------------------------------: |
-  |      일반 함수로서 호출      | 전역 객체 브라우저 환경: window/ node환경: global |
-  | 메서드로서 호출(객체 메서드) |               메서드를 호출한 객체                |
-  |     생성자 함수로서 호출     |           생성자 함수가 생성할 인스턴스           |
+  |        함수 호출 방식        |                      this가 가르키는것                       |
+  | :--------------------------: | :----------------------------------------------------------: |
+  |      일반 함수로서 호출      | 전역 객체 브라우저 환경: window/ node환경: global (엄격모드에서는 undefined다. ) |
+  | 메서드로서 호출(객체 메서드) |                     메서드를 호출한 객체                     |
+  |     생성자 함수로서 호출     |                생성자 함수가 생성할 인스턴스                 |
 
 - this는 일반적으로 자기 참조 변수임으로, `strict mode가 적용된 일반 함수 내부의 this에서는 undefined가 반환된다.`  
 
 #### 함수 호출방식과 this바인딩
 
+this의 바인딩은 동적으로 결정된다.
+
 - 렉시컬 스코프와 this바인딩의 결정시기는 다르다.
 
-  - 렉시컬 스코프는 함수가 정의된곳 상위 스코프를 결정한다, 하지만 this 바인딩은 함수 호출 시점에 결정된다.
+  - 렉시컬 스코프는 함수가 정의된곳 상위 스코프를 결정한다, 
+  - 하지만 this 바인딩은 함수 호출 시점에 결정된다.
+  - 런타임상 동적으로 바인딩된다.
 
 - 일반 함수로 호출된 모든 함수(중첩함수,콜백함수) `내부의 this에는 전역 객체가 바인딩된다.`
 
@@ -1458,12 +1466,27 @@ this는 자신이 속한 객체 또는 인스턴스를 가르키는 자기 참�
         console.log(`내부에서 this는? ${this.v}`);
       },
     };
-    // 객체의 프로퍼티로 호출 ->10
+    // 객체의 프로퍼티 메서드로 호출 ->10
     obj.printV();
   }
   basicThis();
+  
+  function dynamicBinding() {
+    function Info(name) {
+      this.name = name;
+      this.printName = function () {
+        console.log(`name:${this.name}`);
+      };
+    }
+    const kwon = new Info('kwon');
+    function printCallBack(callBack) {
+      // -> name:undefined
+      callBack();
+    }
+    printCallBack(kwon.printName);
+  }
   ```
-
+  
   ```javascript
   function bindThis() {
     const obj = {
@@ -1486,7 +1509,8 @@ this는 자신이 속한 객체 또는 인스턴스를 가르키는 자기 참�
     const obj1 = {
       v: 1,
       print() {
-        // 화살표 함수 냄부의 this는 상위 스코프의 this를 가르킨다.
+        // 화살표 함수 내부의 this는 상위 스코프의 this를 가르킨다.
+        // 화살표 함수는 생성시 렉시컬 환경에서의 상위 this를 기억한다.
         setTimeout(() => console.log(this.v), 10);
       },
     };
@@ -1494,7 +1518,7 @@ this는 자신이 속한 객체 또는 인스턴스를 가르키는 자기 참�
     const obj2 = {
       v: 1,
       print() {
-        // 화살표 함수 냄부의 this는 상위 스코프의 this를 가르킨다.
+        // 바인드를 통해 this를 연결한다.
         setTimeout(
           function () {
             console.log(this.v);
@@ -1503,10 +1527,31 @@ this는 자신이 속한 객체 또는 인스턴스를 가르키는 자기 참�
         );
       },
     };
+    
+    function Info(name) {
+      this.name = name;
+      this.printName = function () {
+        console.log(`name:${this.name}`);
+      };
+      // 바인드를 통해 this를 연결한다.
+      this.printName = this.printName.bind(this);
+    }
+    const kwon = new Info('kwon');
+    function printCallBack(callBack) {
+      callBack();
+    }
+    printCallBack(kwon.printName);
   }
   ```
-
+  
 - Apply,bind,claa을 사용하여 명시 할수도 있다.
+
+#### 동적으로 바인딩되는 This를 방지
+
+- 객체의 메서드로 정의
+- 화살표 함수로 정의
+
+
 
 
 
@@ -1540,7 +1585,7 @@ this는 자신이 속한 객체 또는 인스턴스를 가르키는 자기 참�
 
 #### 1.래퍼객체
 
-문자열,불리언,숫자 등의 원시값에 문자열,숫자,블리언 객체를 생성하는 표준비틀인 생성자 함수가 있는이유?
+문자열,불리언,숫자 등의 원시값에 문자열,숫자,블리언 객체를 생성하는 표준빑트인 생성자 함수가 있는이유?
 
 - ```javascript
   function basicWraper(params) {
@@ -1567,7 +1612,7 @@ this는 자신이 속한 객체 또는 인스턴스를 가르키는 자기 참�
 
   - this.global
 
-- 전역객체는 계층적 구조상 어떤 객체에도 속하지 않은 모든 빌츠인 객체의 최상위 객체이다.
+- 전역객체는 계층적 구조상 어떤 객체에도 속하지 않은 모든 빌트인 객체의 최상위 객체이다.
 
   - 이는 프로퍼타입 상속 관계상에서 최상위 객체라는 의미가 아니라, 계층적 구조상 표준 빑트인 객체와 호스트 객체를 프로퍼티로 소유한다는 것을 의미한다.
 
@@ -1587,7 +1632,7 @@ this는 자신이 속한 객체 또는 인스턴스를 가르키는 자기 참�
     const str = 'string?';
     // console.log(str.length);
     // console.log(str.toUpperCase());
-    // 해당 코드가 실행되면 암뭄적전역으로 전역객체의 프로퍼티가 된다.
+    // 해당 코드가 실행되면 암묵적전역으로 전역객체의 프로퍼티가 된다.
     y = 10;
   }
   basicWraper();
