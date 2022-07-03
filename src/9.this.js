@@ -94,3 +94,18 @@ function dynamicBinding() {
   printCallBack(kwon.printName);
 }
 // dynamicBinding();
+function objectMethod() {
+  function obj() {
+    const name = 'kwon';
+    // print() {
+    //   console.log(`this : ${this.name}`);
+    // }
+    print1 = function () {
+      console.log(`this : ${this.name}`);
+    };
+  }
+  console.dir(obj);
+  // obj.print();
+}
+
+objectMethod();

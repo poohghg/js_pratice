@@ -259,7 +259,7 @@ function testConstructor() {
 }
 // testConstructor();ㄴ
 
-function testStatic(params) {
+function testStatic() {
   function Obj(name) {
     const staticA = 'A';
     this.name = name;
@@ -271,5 +271,5 @@ function testStatic(params) {
   // console.log(`obj1.staticb:"${obj1.staticB}`);
   console.log(`obj1.staticb:"${obj1.name}`);
 }
-
-testStatic();
+// testStatic();
+function name() {}
